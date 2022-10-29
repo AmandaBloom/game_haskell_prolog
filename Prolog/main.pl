@@ -173,13 +173,13 @@ s :-
    circumstances, a room may have more than one description. */
 
 describe(hallway_ground_floor) :- 
-        write('What a long corridor. For a long time we haven’t done cleaning here.'), nl.
+        write('What a long corridor. For a long time we haven’t done cleaning here.'), nl,
         write('What huge spiders are sitting on the ceiling'), nl.
 
 describe(room1) :- 
         at(sofa, room1),
         at(fridge, room1),
-        write('You are in the first room. Damn, the door to the next room is closed'), nl.
+        write('You are in the first room. Damn, the door to the next room is closed'), nl,
         write('I have to find the key to the door to open the door to the second room.'), nl.
 
 describe(room2) :- write('It''s so empty here, like after a robbery'), nl.
@@ -191,7 +191,7 @@ describe(corridor_1_floor) :-
 describe(room3) :- write(''), nl.
 
 describe(room4) :- 
-        write('Small room.'), nl.
+        write('Small room.'), nl,
         write('There was a work table and an armchair in the room, and a picture hung on the wall.'), nl.
 
 description(fridge) :- write('Oooh, it''s time to update this old refrigerator. Buzzing like a plane on the runway'), !, nl.
