@@ -7,8 +7,18 @@
 at(obj1, room1).
 at(sofa, room1).
 at(fridge, room1).
+at(wardrobe, corridor_1_floor).
+at(carpet, room3).
+at(picture, room4).
+at(table, room4).
+at(armchair, room4).
+
+behind(case, picture).
 
 in(key, fridge).
+in(laptop, case).
+
+hidden(hole, carpet).
 
 
 /* Describe floor where room is located */
@@ -162,7 +172,8 @@ s :-
 /* These rules describe the various rooms.  Depending on
    circumstances, a room may have more than one description. */
 
-describe(hallway_ground_floor) :- write('What a long corridor. For a long time we haven’t done cleaning here.'), nl.
+describe(hallway_ground_floor) :- 
+        write('What a long corridor. For a long time we haven’t done cleaning here.'), nl.
         write('What huge spiders are sitting on the ceiling'), nl.
 
 describe(room1) :- 
@@ -174,11 +185,14 @@ describe(room1) :-
 describe(room2) :- write('It''s so empty here, like after a robbery'), nl.
 
 describe(corridor_1_floor) :- 
-        write(''), nl.
+        at(wardrobe, corridor_1_floor),
+        write('Ooooh no, a big wardrobe is right in my path'), nl.
 
 describe(room3) :- write(''), nl.
 
-describe(room4) :- write(''), nl.
+describe(room4) :- 
+        write('Small room.'), nl.
+        write('There was a work table and an armchair in the room, and a picture hung on the wall.'), nl.
 
 description(fridge) :- write('Oooh, it''s time to update this old refrigerator. Buzzing like a plane on the runway'), !, nl.
 
@@ -186,8 +200,16 @@ description(sofa) :- write('What an old shabby sofa. How can you sit on it?'), !
 
 describe(key) :- write('Yes, it''s a key.'), !, nl.
 
+describe(wardrobe) :- write('A large oak wardrobe closes the passage to the rooms on the 2nd floor'), !, nl.
+
+describe(carpet) :- write('Great modern carpet. The truth does not fit into the interior of the house a little'), !, nl.
+
+describe(armchair) :- write('A chair is like a chair. lol what else to say'), !, nl.
+
+describe(picture) :- write('The picture was kind of weird. This was a screenshot of the top 13 in PUBG solo'), !, nl.
+
 describe(case) :-
-        at(laptop, case),
+        in(laptop, case),
         write('You found a case!'), nl.
 
 describe(case) :-
