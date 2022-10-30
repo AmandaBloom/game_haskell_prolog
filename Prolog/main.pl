@@ -1,19 +1,30 @@
+/*<Agent Of Fortune Game> by Roman Ishchuk, Denys Savytskyi, Tomasz Pawlak*/
+
 :- ensure_loaded(navigation).
 
-:- dynamic position/2, holding/1, current_room/2. at/2.
+:- dynamic position/2, holding/1, current_room/1, at/2, story_tell/1.
 :- retractall(at(_, _)), retractall(current_room(_, _)), retractall(alive(_)), retractall(path(_, _)).
 
 % at(thing, someplace).
+at(old_chair, hallway_ground_floor).
+at(car_keys, hallway_ground_floor).
+at(stairs, hallway_ground_floor).
+
 at(obj1, room1).
 at(sofa, room1).
 at(fridge, room1).
+
 at(wardrobe, corridor_1_floor).
+
 at(carpet, room3).
+
 at(picture, room4).
 at(table, room4).
 at(armchair, room4).
 
 behind(case, picture).
+
+player_at(room).
 
 in(key, fridge).
 in(laptop, case).
@@ -43,6 +54,12 @@ path(corridor_1_floor, room4).
 
 current_room(hallway_ground_floor, ground_floor).
 
+/* Tells the story connected with rooms*/
+
+story_tell(hallway_ground_floor) :- writeln('Should I take a look at items here? - inspect(X)').
+story_tell(keys) :- writeln('Should I take it to inventory? - take(car_keys)').
+story_tell(_) :- nl.
+
 /* These rules describe how to pick up an object. */
 
 take(X) :-
@@ -62,12 +79,19 @@ take(_) :-
         write('I don''t see it here.'),
         nl.
 
-/* This rule defines short cut for take/1 */
+/* This rule defines short cut for take */
 
 t(X) :-
         take(X).
 
 /* These rules describe how to put down an object. */
+
+tell_objects_at(Place) :-
+        at(X, Place),
+        write('We gotta '), write(X), write(' in this place. '), nl,
+        fail.
+		
+tell_objects_at(_).
 
 drop(X) :-
         holding(X),
@@ -101,12 +125,41 @@ invertory_r :-
         fail.
 invertory_r.
 
-/* This rule defines short cut to call invertory/0 */
+/* First panel in game telling the story */
+
+introduction :-
+        nl,
+        write('Welcome Agent!. The world is a dangerous place. Mister Zero wants to make it'),
+		nl,
+		write('even worse. Our intelligence has proven he has nuclear codes and he''s gonna'),
+		nl, write('use them to destroy The World. That''s why you were sent to his house. Search'),
+		nl, write('for the Laptop with codes and protect our future...'),
+		nl,
+		write('Be quick, he is gonna come back in any time... '),
+		nl,
+        write('.....'), nl,
+		write('..........'), nl,
+		write('...............Agent Of Fortune Game.....'), nl,
+		write('..........'), nl,
+		write('.....'), nl,
+        write('Finally... You entered Mister Zero''s crib. Front door appears to be intact.'), nl, write('You''re into the hallway_ground_floor. On the small table there''s note - it says'), 
+		nl,
+		write('he will be back in 10 minutes. '), nl,
+        nl.
+
+/* This rule defines short cut to call invertory  */
 
 i :-
         invertory.
 
 /* This rule describes how to check items around */
+
+look :-
+	current_room(Place, _),
+		describe(Place),nl,
+		tell_objects_at(Place),
+		story_tell(Place),
+		nl.
 
 look_around :-
         current_room(X, _),
@@ -114,8 +167,8 @@ look_around :-
         writeln('Items here:'),
         look_around_r(X), !.
 
-look_around :-
-        writeln('There is nothing in here').
+/*look_around :-
+        writeln('There is nothing in here').*/
 
 look_around_r(X) :-
         at(Y, X),
@@ -123,10 +176,16 @@ look_around_r(X) :-
         fail.
 look_around_r(_).
 
-/* This rule defines short cut for look_around/0 */
+/* This rule defines short cut for look_around */
 
 la :-
         look_around.
+
+/* Take a look at object */
+
+inspect(X) :-
+	describe(X).
+	
 
 /* This rule tells how to die. */
 
@@ -145,40 +204,49 @@ finish :-
 
 /* This rule just writes out game instructions. */
 
-instructions :-
+help :-
         writeln('Enter commands using standard Prolog syntax.'),
         writeln('Available commands are:'),
-        writeln('start. ( s. )                  -- to start the game.'),
-        writeln('go(Room)                       -- to enter the room.'),
-        writeln('take(Object). ( t(O). )        -- to pick up an object.'),
-        writeln('drop(Object). ( d(O). )        -- to put down an object.'),
-        writeln('inventory. ( i. )              -- to check invertory.'),
-        % TODO writeln('look_around. ( la. )  -- to look around you again.'),
-        writeln('instructions.                  -- to see this message again.'),
-        writeln('halt.                          -- to end the game and quit.').
+        writeln('start. / s.                -- Start the game.'),
+        writeln('go(Room)                   -- Enter the room.'),
+        writeln('take(Object). / t(O).      -- Pick up an object.'),
+        writeln('drop(Object). / d(O).      -- Put down an object.'),
+        writeln('inventory. / i.            -- Check invertory.'),
+        writeln('look_around. / la.         -- Look around you again.'),
+		writeln('inspect(Object)            -- Look at smth in room'),
+        writeln('help.                      -- See this message again.'),
+        writeln('halt.                      -- End the game and quit.'),
+		nl.
 
 
 /* This rule prints out instructions and tells where you are. */
 
 start :-
-        instructions.
+		introduction,
+        help,
+		assert(current_room(hallway_ground_floor, ground_floor)),
+		look.
 
-/* This rule defines short cut for start/0 */
+/* This rule defines short cut for start */
 
 s :-
-        start,
-        assert(current_room(hallway_ground_floor, ground_floor)).
+        start.
 
-/* These rules describe the various rooms.  Depending on
-   circumstances, a room may have more than one description. */
+/* These rules describe the various rooms.  Depending on circumstances, a room may have more than one description. */
 
-describe(hallway_ground_floor) :- 
-        write('What a long corridor. For a long time we haven’t done cleaning here.'), nl,
-        write('What huge spiders are sitting on the ceiling'), nl.
+describe(hallway_ground_floor) :-
+		writeln('I''m in hallway_ground_floor'),
+        writeln('What a long corridor. For a long time Mister Zero hasn''t done cleaning here.'),
+        writeln('What huge spiders are sitting on the ceiling').
+		
+describe(old_chair) :-
+		writeln('Looks like he likes old things, but he doesn''t take care of them. Very well...').
+
+describe(car_keys) :-
+		writeln('Nice ... Besides being a villian, he also has a taste for cars. It''s like'),
+		writeln('a code written at the belt - 1337. It may help me sometime.').
 
 describe(room1) :- 
-        at(sofa, room1),
-        at(fridge, room1),
         write('You are in the first room. Damn, the door to the next room is closed'), nl,
         write('I have to find the key to the door to open the door to the second room.'), nl.
 
@@ -194,9 +262,9 @@ describe(room4) :-
         write('Small room.'), nl,
         write('There was a work table and an armchair in the room, and a picture hung on the wall.'), nl.
 
-description(fridge) :- write('Oooh, it''s time to update this old refrigerator. Buzzing like a plane on the runway'), !, nl.
+describe(fridge) :- write('Oooh, it''s time to update this old refrigerator. Buzzing like a plane on the runway'), !, nl.
 
-description(sofa) :- write('What an old shabby sofa. How can you sit on it?'), !, nl.
+describe(sofa) :- write('What an old shabby sofa. How can you sit on it?'), !, nl.
 
 describe(key) :- write('Yes, it''s a key.'), !, nl.
 
@@ -214,4 +282,7 @@ describe(case) :-
 
 describe(case) :-
         write('The case has already been opened.'), nl.
+		
+describe(_) :-
+        write('It smells like 404 to me. Something went wrong.'), nl.
 
