@@ -1,6 +1,7 @@
 /*<Agent Of Fortune Game> by Roman Ishchuk, Denys Savytskyi, Tomasz Pawlak*/
 
 :- ensure_loaded(navigation).
+:- ensure_loaded(timer).
 
 :- dynamic position/2, holding/1, current_room/1, at/2, story_tell/1.
 :- retractall(at(_, _)), retractall(current_room(_, _)), retractall(alive(_)), retractall(passage(_, _)).
@@ -63,6 +64,7 @@ story_tell(_) :- nl.
 /* These rules describe how to pick up an object. */
 
 take(X) :-
+        timer_check,
         holding(X),
         write('You''re already holding it!'),
         !, nl.
@@ -87,6 +89,7 @@ t(X) :-
 /* These rules describe how to put down an object. */
 
 tell_objects_at(Place) :-
+        timer_check,
         at(X, Place),
         write('We gotta '), write(X), write(' in this place. '), nl,
         fail.
@@ -94,6 +97,7 @@ tell_objects_at(Place) :-
 tell_objects_at(_).
 
 drop(X) :-
+        timer_check,
         holding(X),
         current_room(Place, _),
         retract(holding(X)),
@@ -113,6 +117,7 @@ d(X) :-
 /* This rule write out content of invertory */
 
 invertory :-
+        timer_check,
         holding(_),
         invertory_r.
 
@@ -129,23 +134,19 @@ invertory_r.
 
 introduction :-
         nl,
-        write('Welcome Agent!. The world is a dangerous place. Mister Zero wants to make it'),
-		nl,
-		write('even worse. Our intelligence has proven he has nuclear codes and he''s gonna'),
-		nl, write('use them to destroy The World. That''s why you were sent to his house. Search'),
-		nl, write('for the Laptop with codes and protect our future...'),
-		nl,
-		write('Be quick, he is gonna come back in any time... '),
-		nl,
+        writeln('Welcome Agent!. The world is a dangerous place. Mister Zero wants to make it'),
+        writeln('even worse. Our intelligence has proven he has nuclear codes and he''s gonna'),
+        writeln('use them to destroy The World. That''s why you were sent to his house. Search'),
+        writeln('for the Laptop with codes and protect our future...'),
+        writeln('Be quick, he is gonna come back in any time... '),
+        writeln('.....'),
+        writeln('..........'),
+        write('...............Agent Of Fortune Game.....'), nl,
+        write('..........'), nl,
         write('.....'), nl,
-		write('..........'), nl,
-		write('...............Agent Of Fortune Game.....'), nl,
-		write('..........'), nl,
-		write('.....'), nl,
-        write('Finally... You entered Mister Zero''s crib. Front door appears to be intact.'), nl, write('You''re into the hallway_ground_floor. On the small table there''s note - it says'),
-		nl,
-		write('he will be back in 10 minutes. '), nl,
-        nl.
+        write('Finally... You entered Mister Zero''s crib. Front door appears to be intact.'), nl,
+        write('You''re into the hallway_ground_floor. On the small table there''s note - it says'),
+        write('he will be back in 10 minutes, hurry up '), nl.
 
 /* This rule defines short cut to call invertory  */
 
@@ -155,11 +156,12 @@ i :-
 /* This rule describes how to check items around */
 
 look :-
+        timer_check,
 	current_room(Place, _),
 		describe(Place),nl,
 		tell_objects_at(Place),
 		story_tell(Place),
-		nl.
+		nl, !.
 
 look_around :-
         current_room(X, _),
@@ -184,6 +186,7 @@ la :-
 /* Take a look at object */
 
 inspect(X) :-
+        timer_check,
 	describe(X).
 
 
@@ -215,18 +218,20 @@ help :-
         writeln('inventory. / i.            -- Check invertory.'),
         writeln('look_around. / la.         -- Look around you again.'),
         writeln('inspect(Object)            -- Look at smth in room'),
+        writeln('time_left / tl.            -- Сheck how much time is left'),
         writeln('help.                      -- See this message again.'),
         writeln('halt.                      -- End the game and quit.'),
-	nl.
+	nl, !.
 
 
 /* This rule prints out instructions and tells where you are. */
 
 start :-
-		introduction,
+        start_timer(600000),
+        introduction,
         help,
-		assert(current_room(hallway_ground_floor, ground_floor)),
-		look.
+        assert(current_room(hallway_ground_floor, ground_floor)),
+        look.
 
 /* This rule defines short cut for start */
 
@@ -236,7 +241,7 @@ s :-
 /* These rules describe the various rooms.  Depending on circumstances, a room may have more than one description. */
 
 describe(hallway_ground_floor) :-
-		writeln('I''m in hallway_ground_floor'),
+        writeln('I''m in hallway_ground_floor'),
         writeln('What a long corridor. For a long time Mister Zero hasn''t done cleaning here.'),
         writeln('What huge spiders are sitting on the ceiling').
 
