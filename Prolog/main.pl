@@ -3,7 +3,7 @@
 :- ensure_loaded(navigation).
 
 :- dynamic position/2, holding/1, current_room/1, at/2, story_tell/1.
-:- retractall(at(_, _)), retractall(current_room(_, _)), retractall(alive(_)), retractall(path(_, _)).
+:- retractall(at(_, _)), retractall(current_room(_, _)), retractall(alive(_)), retractall(passage(_, _)).
 
 % at(thing, someplace).
 at(old_chair, hallway_ground_floor).
@@ -44,13 +44,13 @@ floor(room4, first_floor).
 
 /* Describe paths to rooms */
 
-path(hallway_ground_floor, room1).
-path(hallway_ground_floor, room2).
+passage(hallway_ground_floor, room1).
+passage(hallway_ground_floor, room2).
 
-path(hallway_ground_floor, corridor_1_floor).
+passage(hallway_ground_floor, corridor_1_floor).
 
-path(corridor_1_floor, room3).
-path(corridor_1_floor, room4).
+passage(corridor_1_floor, room3).
+passage(corridor_1_floor, room4).
 
 current_room(hallway_ground_floor, ground_floor).
 
@@ -72,7 +72,7 @@ take(X) :-
         at(X, Place),
         retract(at(X, Place)),
         assert(holding(X)),
-        format('You have picked the ~s', [X]),
+        format('You have picked the ~s\n', [X]),
         !, nl.
 
 take(_) :-
@@ -90,7 +90,7 @@ tell_objects_at(Place) :-
         at(X, Place),
         write('We gotta '), write(X), write(' in this place. '), nl,
         fail.
-		
+
 tell_objects_at(_).
 
 drop(X) :-
@@ -98,7 +98,7 @@ drop(X) :-
         current_room(Place, _),
         retract(holding(X)),
         assert(at(X, Place)),
-        format('You have dropped the ~s', [X]),
+        format('You have dropped the ~s\n', [X]),
         !, nl.
 
 drop(_) :-
@@ -142,7 +142,7 @@ introduction :-
 		write('...............Agent Of Fortune Game.....'), nl,
 		write('..........'), nl,
 		write('.....'), nl,
-        write('Finally... You entered Mister Zero''s crib. Front door appears to be intact.'), nl, write('You''re into the hallway_ground_floor. On the small table there''s note - it says'), 
+        write('Finally... You entered Mister Zero''s crib. Front door appears to be intact.'), nl, write('You''re into the hallway_ground_floor. On the small table there''s note - it says'),
 		nl,
 		write('he will be back in 10 minutes. '), nl,
         nl.
@@ -172,7 +172,7 @@ look_around :-
 
 look_around_r(X) :-
         at(Y, X),
-        format('\t -~s', [Y]),
+        format('\t -~s\n', [Y]),
         fail.
 look_around_r(_).
 
@@ -185,7 +185,7 @@ la :-
 
 inspect(X) :-
 	describe(X).
-	
+
 
 /* This rule tells how to die. */
 
@@ -209,14 +209,15 @@ help :-
         writeln('Available commands are:'),
         writeln('start. / s.                -- Start the game.'),
         writeln('go(Room)                   -- Enter the room.'),
+        writeln('find_passages. / fp.       -- Find available passages.'),
         writeln('take(Object). / t(O).      -- Pick up an object.'),
         writeln('drop(Object). / d(O).      -- Put down an object.'),
         writeln('inventory. / i.            -- Check invertory.'),
         writeln('look_around. / la.         -- Look around you again.'),
-		writeln('inspect(Object)            -- Look at smth in room'),
+        writeln('inspect(Object)            -- Look at smth in room'),
         writeln('help.                      -- See this message again.'),
         writeln('halt.                      -- End the game and quit.'),
-		nl.
+	nl.
 
 
 /* This rule prints out instructions and tells where you are. */
@@ -238,7 +239,7 @@ describe(hallway_ground_floor) :-
 		writeln('I''m in hallway_ground_floor'),
         writeln('What a long corridor. For a long time Mister Zero hasn''t done cleaning here.'),
         writeln('What huge spiders are sitting on the ceiling').
-		
+
 describe(old_chair) :-
 		writeln('Looks like he likes old things, but he doesn''t take care of them. Very well...').
 
@@ -246,19 +247,19 @@ describe(car_keys) :-
 		writeln('Nice ... Besides being a villian, he also has a taste for cars. It''s like'),
 		writeln('a code written at the belt - 1337. It may help me sometime.').
 
-describe(room1) :- 
+describe(room1) :-
         write('You are in the first room. Damn, the door to the next room is closed'), nl,
         write('I have to find the key to the door to open the door to the second room.'), nl.
 
 describe(room2) :- write('It''s so empty here, like after a robbery'), nl.
 
-describe(corridor_1_floor) :- 
+describe(corridor_1_floor) :-
         at(wardrobe, corridor_1_floor),
         write('Ooooh no, a big wardrobe is right in my path'), nl.
 
 describe(room3) :- write(''), nl.
 
-describe(room4) :- 
+describe(room4) :-
         write('Small room.'), nl,
         write('There was a work table and an armchair in the room, and a picture hung on the wall.'), nl.
 
@@ -282,7 +283,7 @@ describe(case) :-
 
 describe(case) :-
         write('The case has already been opened.'), nl.
-		
+
 describe(_) :-
         write('It smells like 404 to me. Something went wrong.'), nl.
 

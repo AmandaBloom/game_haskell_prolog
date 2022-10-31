@@ -16,32 +16,31 @@ floor(Room) :-
 
 
 /* These rules describe where a character can go */
-% TODO guess a better function name
-check_paths :-
-        writeln('Paths found:'),
-        check_paths_r.
+find_passages :-
+        writeln('From here you cat go to:'),
+        find_passages_r.
 
-check_paths_r :-
+find_passages_r :-
         current_room(X, _),
-        (path(Y, X); path(X, Y)),
-        format('\t -~s', [Y]),
+        (passage(Y, X); passage(X, Y)),
+        format('\t -~s\n', [Y]),
         fail.
-check_paths_r.
+find_passages_r.
 
-/* This rule defines short cut to call check_paths/0 */
+/* This rule defines short cut to call find_passages/0 */
 
-cp :-
-        check_paths.
+fp :-
+        find_passages.
 
 /* This rule descibes how to go to another room */
 
 go(X) :-
         current_room(Y, _),
-        once((path(Y, X); path(X, Y))),
+        once((passage(Y, X); passage(X, Y))),
         retract(current_room(_, _)),
         floor(X, Z),
         assert(current_room(X, Z)),
-        format('Welcome to the ~s', [X]), !.
+        format('Welcome to the ~s\n', [X]), !.
 
 go(_) :-
-        write('I you cannot go there').
+        writeln('I you cannot go there').
