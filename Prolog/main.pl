@@ -3,21 +3,35 @@
 :- ensure_loaded(navigation).
 :- ensure_loaded(timer).
 
-:- dynamic position/2, holding/1, current_room/1, at/2, story_tell/1.
-:- retractall(at(_, _)), retractall(current_room(_, _)), retractall(alive(_)), retractall(passage(_, _)).
+:- dynamic position/2, holding/1, current_room/2, at/2, story_tell/1, passage/2, title/2, key/1.
+:- retractall(at(_, _)), retractall(current_room(_, _)), retractall(alive(_)), retractall(passage(_, _)), retractall(title(_, _)),
+        retractall(key(_)).
 
 % at(thing, someplace).
+/* hallway_ground_floor */
 at(old_chair, hallway_ground_floor).
 at(car_keys, hallway_ground_floor).
-at(stairs, hallway_ground_floor).
+at(doormat, hallway_ground_floor).
+at(door1, hallway_ground_floor).
+at(door2, hallway_ground_floor).
+
+/* room1 */
 
 at(obj1, room1).
 at(sofa, room1).
 at(fridge, room1).
 
+/* room2 */
+
+/* corridor_1_floor */
+
 at(wardrobe, corridor_1_floor).
 
+/* room2 */
+
 at(carpet, room3).
+
+/* room4 */
 
 at(picture, room4).
 at(table, room4).
@@ -46,9 +60,6 @@ floor(room4, first_floor).
 /* Describe paths to rooms */
 
 passage(hallway_ground_floor, room1).
-passage(hallway_ground_floor, room2).
-
-passage(hallway_ground_floor, corridor_1_floor).
 
 passage(corridor_1_floor, room3).
 passage(corridor_1_floor, room4).
@@ -59,27 +70,24 @@ current_room(hallway_ground_floor, ground_floor).
 
 story_tell(hallway_ground_floor) :- writeln('Should I take a look at items here? - inspect(X)').
 story_tell(keys) :- writeln('Should I take it to inventory? - take(car_keys)').
-story_tell(_) :- nl.
+story_tell(_) :- nl, !.
 
 /* These rules describe how to pick up an object. */
 
 take(X) :-
         timer_check,
         holding(X),
-        write('You''re already holding it!'),
-        !, nl.
+        writeln('You''re already holding it!'), !.
 
 take(X) :-
         current_room(Place, _),
         at(X, Place),
         retract(at(X, Place)),
         assert(holding(X)),
-        format('You have picked the ~s\n', [X]),
-        !, nl.
+        format('You have picked the ~s\n', [X]), !.
 
 take(_) :-
-        write('I don''t see it here.'),
-        nl.
+        writeln('I don''t see it here.'), !.
 
 /* This rule defines short cut for take */
 
@@ -91,7 +99,13 @@ t(X) :-
 tell_objects_at(Place) :-
         timer_check,
         at(X, Place),
-        write('We gotta '), write(X), write(' in this place. '), nl,
+        write('We gotta '),
+        (
+                title(X, R) -> write(R)
+        ;
+                write(X)
+        ),
+        write(' in this place. '), nl,
         fail.
 
 tell_objects_at(_).
@@ -103,11 +117,10 @@ drop(X) :-
         retract(holding(X)),
         assert(at(X, Place)),
         format('You have dropped the ~s\n', [X]),
-        !, nl.
+        !.
 
 drop(_) :-
-        write('You aren''t holding it!'),
-        nl.
+        writeln('You aren''t holding it!'), !.
 
 /* This rule defines short cut for drop/1 */
 
@@ -119,7 +132,7 @@ d(X) :-
 invertory :-
         timer_check,
         holding(_),
-        invertory_r.
+        invertory_r, !.
 
 invertory :-
         write('You inventory in empty').
@@ -159,22 +172,30 @@ look :-
         timer_check,
 	current_room(Place, _),
 		describe(Place),nl,
+                find_passages, nl,
 		tell_objects_at(Place),
 		story_tell(Place),
 		nl, !.
 
 look_around :-
+        timer_check,
         current_room(X, _),
         at(_, X),
         writeln('Items here:'),
         look_around_r(X), !.
 
-/*look_around :-
-        writeln('There is nothing in here').*/
+look_around :-
+        writeln('There is nothing in here').
 
 look_around_r(X) :-
         at(Y, X),
-        format('\t -~s\n', [Y]),
+        write('\t -'),
+        (
+                title(Y, R) -> write(R)
+        ;
+                write(Y)
+        ),
+        nl,
         fail.
 look_around_r(_).
 
@@ -185,9 +206,15 @@ la :-
 
 /* Take a look at object */
 
+inspect(doormat) :-
+        timer_check,
+        describe(doormat),
+        writeln('Here is a key. Shall i pick i up? - take(X)'),
+        assert(at(zinc_key, hallway_ground_floor)), !.
+
 inspect(X) :-
         timer_check,
-	describe(X).
+	describe(X), !.
 
 
 /* This rule tells how to die. */
@@ -243,52 +270,88 @@ s :-
 describe(hallway_ground_floor) :-
         writeln('I''m in hallway_ground_floor'),
         writeln('What a long corridor. For a long time Mister Zero hasn''t done cleaning here.'),
-        writeln('What huge spiders are sitting on the ceiling').
+        writeln('What huge spiders are sitting on the ceiling'), !.
 
 describe(old_chair) :-
 		writeln('Looks like he likes old things, but he doesn''t take care of them. Very well...').
 
 describe(car_keys) :-
 		writeln('Nice ... Besides being a villian, he also has a taste for cars. It''s like'),
-		writeln('a code written at the belt - 1337. It may help me sometime.').
+		writeln('a code written at the belt - 1337. It may help me sometime.'), !.
 
 describe(room1) :-
         write('You are in the first room. Damn, the door to the next room is closed'), nl,
-        write('I have to find the key to the door to open the door to the second room.'), nl.
+        write('I have to find the key to the door to open the door to the second room.'), nl, !.
 
-describe(room2) :- write('It''s so empty here, like after a robbery'), nl.
+describe(room2) :- write('It''s so empty here, like after a robbery'), nl, !.
 
 describe(corridor_1_floor) :-
         at(wardrobe, corridor_1_floor),
-        write('Ooooh no, a big wardrobe is right in my path'), nl.
+        write('Ooooh no, a big wardrobe is right in my path'), nl, !.
 
-describe(room3) :- write(''), nl.
+describe(room3) :- writeln(''), !.
 
 describe(room4) :-
         write('Small room.'), nl,
-        write('There was a work table and an armchair in the room, and a picture hung on the wall.'), nl.
+        write('There was a work table and an armchair in the room, and a picture hung on the wall.'), nl, !.
 
-describe(fridge) :- write('Oooh, it''s time to update this old refrigerator. Buzzing like a plane on the runway'), !, nl.
+describe(fridge) :- writeln('Oooh, it''s time to update this old refrigerator. Buzzing like a plane on the runway'), !.
 
-describe(sofa) :- write('What an old shabby sofa. How can you sit on it?'), !, nl.
+describe(sofa) :- writeln('What an old shabby sofa. How can you sit on it?'), !.
 
-describe(key) :- write('Yes, it''s a key.'), !, nl.
+describe(key) :- writeln('Yes, it''s a key.'), !.
 
-describe(wardrobe) :- write('A large oak wardrobe closes the passage to the rooms on the 2nd floor'), !, nl.
+describe(wardrobe) :- writeln('A large oak wardrobe closes the passage to the rooms on the 2nd floor'), !.
 
-describe(carpet) :- write('Great modern carpet. The truth does not fit into the interior of the house a little'), !, nl.
+describe(carpet) :- writeln('Great modern carpet. The truth does not fit into the interior of the house a little'), !.
 
-describe(armchair) :- write('A chair is like a chair. lol what else to say'), !, nl.
+describe(armchair) :- writeln('A chair is like a chair. lol what else to say'), !.
 
-describe(picture) :- write('The picture was kind of weird. This was a screenshot of the top 13 in PUBG solo'), !, nl.
+describe(picture) :- writeln('The picture was kind of weird. This was a screenshot of the top 13 in PUBG solo'), !.
 
 describe(case) :-
         in(laptop, case),
-        write('You found a case!'), nl.
+        writeln('You found a case!'), !.
 
-describe(case) :-
-        write('The case has already been opened.'), nl.
+describe(case) :- writeln('The case has already been opened.'), !.
 
-describe(_) :-
-        write('It smells like 404 to me. Something went wrong.'), nl.
+describe(door1) :- writeln('A pine door with a big glass panel. Shall i try opening it? - open(X)'), !.
+
+describe(doormat) :- writeln('Good old welcome doormat.'), !.
+
+describe(_) :- writeln('It smells like 404 to me. Something went wrong.'), !.
+
+/* This rule describe how to move objects */
+
+move(wardrobe) :-
+        writeln('Oh, it is moving.'),
+        writeln('Here are doors!').
+
+move(_) :-
+        writeln('I cant move it').
+
+open(door1) :-
+        writeln('creeeeeek...'),
+        assert(passage(hallway_ground_floor, room2)),
+        retract(at(door1, hallway_ground_floor)), !.
+
+open(door2) :-
+        holding(zinc_key),
+        writeln('Door2 is opened now'),
+        assert(passage(hallway_ground_floor, room2)),
+        retract(at(door2, hallway_ground_floor)), !.
+
+open(door2) :-
+        writeln('Seems like it is locked. I need a key.'),
+        change_title(door2, 'door2 (locked)').
+
+
+open(_) :- writeln('Not sure if it is possible to open it.'), !.
+
+o(X) :-
+        open(X), !.
+
+change_title(Obj, Title) :-
+        retractall(title(Obj, _)),
+        assert(title(Obj, Title)).
 

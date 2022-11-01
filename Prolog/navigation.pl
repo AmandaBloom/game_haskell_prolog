@@ -21,15 +21,15 @@ floor(Room) :-
 /* These rules describe where a character can go */
 find_passages :-
         timer_check,
+        current_room(Room, _),
         writeln('From here you cat go to:'),
-        find_passages_r.
+        find_passages_r(Room), !.
 
-find_passages_r :-
-        current_room(X, _),
-        (passage(Y, X); passage(X, Y)),
+find_passages_r(Room) :-
+        (passage(Y, Room); passage(Room, Y)),
         format('\t -~s\n', [Y]),
         fail.
-find_passages_r.
+find_passages_r(_).
 
 /* This rule defines short cut to call find_passages/0 */
 
@@ -42,11 +42,11 @@ go(X) :-
         timer_check,
         current_room(Y, _),
         once((passage(Y, X); passage(X, Y))),
-        retract(current_room(_, _)),
+        retractall(current_room(_, _)),
         floor(X, Z),
         assert(current_room(X, Z)),
         format('Welcome to the ~s\n\n', [X]),
-        look.
+        look, !.
 
 go(_) :-
         writeln('I you cannot go there').
