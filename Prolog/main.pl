@@ -70,6 +70,8 @@ current_room(hallway_ground_floor, ground_floor).
 
 story_tell(hallway_ground_floor) :- writeln('Should I take a look at items here? - inspect(X)').
 story_tell(keys) :- writeln('Should I take it to inventory? - take(car_keys)').
+story_tell(room1) :- writeln('Shold I take a look at items here? - inspect(X)').
+story_tell(fridge) :- writeln('Maybe theres something inside - '), writeln('Or should I turn it off so it doesnt interfere? - turn_off(X)').
 story_tell(_) :- nl, !.
 
 /* These rules describe how to pick up an object. */
@@ -109,6 +111,11 @@ tell_objects_at(Place) :-
         fail.
 
 tell_objects_at(_).
+
+turn_off(X) :-
+	X == fridge,
+	write('Oooooh noooo.... BoooooM.'), nl,
+	die.
 
 drop(X) :-
         timer_check,
