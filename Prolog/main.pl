@@ -3,7 +3,7 @@
 :- ensure_loaded(navigation).
 :- ensure_loaded(timer).
 
-:- dynamic position/2, holding/1, current_room/2, at/2, story_tell/1, passage/2, title/2, key/1.
+:- dynamic position/2, holding/1, current_room/2, at/2, in/2, story_tell/1, passage/2, title/2, key/1.
 :- retractall(at(_, _)), retractall(current_room(_, _)), retractall(alive(_)), retractall(passage(_, _)), retractall(title(_, _)),
         retractall(key(_)).
 
@@ -39,7 +39,7 @@ at(armchair, room4).
 
 behind(case, picture).
 
-player_at(room).
+player_at(room1).
 
 in(key, fridge).
 in(laptop, case).
@@ -88,6 +88,14 @@ take(X) :-
         assert(holding(X)),
         format('You have picked the ~s\n', [X]), !.
 
+take(X) :- 
+    player_at(Place),
+    at(Object, Place),
+    in(X, Object),
+    retract(in(X, Object)),
+    assert(holding(X)),
+        format('You have picked the ~s\n', [X]), !.
+
 take(_) :-
         writeln('I don''t see it here.'), !.
 
@@ -118,6 +126,8 @@ turn_off(X) :-
 	die.
 
 open_obj(X):-
+  player_at(Place),
+  at(X, Place),
   in(Object, X),
   write('There is '), 
   write(Object), 
