@@ -72,6 +72,7 @@ story_tell(hallway_ground_floor) :- writeln('Should I take a look at items here?
 story_tell(keys) :- writeln('Should I take it to inventory? - take(car_keys)').
 story_tell(room1) :- writeln('Shold I take a look at items here? - inspect(X) or to interact(X) to to interact with objects').
 story_tell(fridge) :- writeln('Maybe theres something inside - open_obj(X)'), writeln('Or should I turn it off so it doesnt interfere? - turn_off(X)').
+story_tell(key) :- writeln('Can I open the door with this key? - take(key).').
 story_tell(_) :- nl, !.
 
 /* These rules describe how to pick up an object. */
@@ -89,11 +90,11 @@ take(X) :-
         format('You have picked the ~s\n', [X]), !.
 
 take(X) :- 
-    player_at(Place),
-    at(Object, Place),
-    in(X, Object),
-    retract(in(X, Object)),
-    assert(holding(X)),
+        player_at(Place),
+        at(Object, Place),
+        in(X, Object),
+        retract(in(X, Object)),
+        assert(holding(X)),
         format('You have picked the ~s\n', [X]), !.
 
 take(_) :-
@@ -126,20 +127,18 @@ turn_off(X) :-
 	die.
 
 open_obj(X):-
-  player_at(Place),
-  at(X, Place),
-  in(Object, X),
-  write('There is '), 
-  write(Object), 
-  write(' in '),
-  write(X), nl.
-  
-open_obj(X) :-
-  X == fridge,
-  write(' Can I open the door with this key?'), nl.
+	player_at(Place),
+	at(X, Place),
+	in(Object, X),
+	write('There is '), 
+	write(Object), 
+	write(' in '),
+	write(X), nl,
+	look_at(Object),
+	nl.
                                                
 interact(X) :-
-  look_at(X).
+        look_at(X).
 
 drop(X) :-
         timer_check,
@@ -231,8 +230,8 @@ look_around_r(X) :-
 look_around_r(_).
 
 look_at(X) :-
-  story_tell(X),
-    nl, !.
+        story_tell(X),
+        nl, !.
 
 /* This rule defines short cut for look_around */
 
