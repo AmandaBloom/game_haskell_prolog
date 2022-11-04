@@ -72,7 +72,12 @@ story_tell(hallway_ground_floor) :- writeln('Should I take a look at items here?
 story_tell(keys) :- writeln('Should I take it to inventory? - take(car_keys)').
 story_tell(room1) :- writeln('Shold I take a look at items here? - inspect(X) or to interact(X) to to interact with objects').
 story_tell(fridge) :- writeln('Maybe theres something inside - open_obj(X)'), writeln('Or should I turn it off so it doesnt interfere? - turn_off(X)').
-story_tell(key) :- writeln('Can I open the door with this key? - take(key).').
+story_tell(key) :- writeln('Can I open the door with this key? - take(key)').
+story_tell(wardrobe) :- writeln('I need to move it to move on. - move(wardrobe).').
+story_tell(carpet):- writeln('There seems to be something strange here, I should investigate - remove(carpet)').
+story_tell(picture) :- writeln('I saw how in the movies they hid something behind the picture - remove(picture)'), writeln('Or go inspect something else? - inspect(X)').
+story_tell(case) :- writeln('Can I open this case? - try_open(case).').
+story_tell(laptop) :- writeln('Eeeee, I found! - take(laptop)').
 story_tell(_) :- nl, !.
 
 /* These rules describe how to pick up an object. */
