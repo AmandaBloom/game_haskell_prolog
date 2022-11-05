@@ -328,6 +328,9 @@ describe(corridor_1_floor) :-
         at(wardrobe, corridor_1_floor),
         write('Ooooh no, a big wardrobe is right in my path'), nl, !.
 
+describe(corridor_1_floor) :-
+        write('Oooh, now I can move on'), nl, !.
+
 describe(room3) :- writeln(''), !.
 
 describe(room4) :-
@@ -364,7 +367,11 @@ describe(_) :- writeln('It smells like 404 to me. Something went wrong.'), !.
 
 move(wardrobe) :-
         writeln('Oh, it is moving.'),
-        writeln('Here are doors!').
+        writeln('Here are doors!'),
+        assert(passage(corridor_1_floor, room3)),
+        assert(passage(corridor_1_floor, room4)),
+        retract(at(wardrobe, corridor_1_floor)), nl,
+        inspect(corridor_1_floor).
 
 move(_) :-
         writeln('I cant move it').
