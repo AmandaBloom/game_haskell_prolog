@@ -27,7 +27,7 @@ find_passages :-
 
 find_passages_r(Room) :-
         (passage(Y, Room); passage(Room, Y)),
-        format('\t -~s\n', [Y]),
+        format('\t - ~s\n', [Y]),
         fail.
 find_passages_r(_).
 

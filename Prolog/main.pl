@@ -3,21 +3,23 @@
 :- ensure_loaded(navigation).
 :- ensure_loaded(timer).
 
-:- dynamic position/2, holding/1, current_room/2, at/2, in/2, story_tell/1, passage/2, title/2, key/1.
+:- dynamic position/2, holding/1, current_room/2, at/2, in/2, story_tell/1, passage/2, title/2, key/1, locked/1.
 :- retractall(at(_, _)), retractall(current_room(_, _)), retractall(alive(_)), retractall(passage(_, _)), retractall(title(_, _)),
         retractall(key(_)).
+
+locked(fridge).
 
 % at(thing, someplace).
 /* hallway_ground_floor */
 at(old_chair, hallway_ground_floor).
 at(car_keys, hallway_ground_floor).
 at(doormat, hallway_ground_floor).
-at(door1, hallway_ground_floor).
-at(door2, hallway_ground_floor).
+at(pine_door, hallway_ground_floor).
+at(oak_door, hallway_ground_floor).
 
 /* room1 */
 
-at(obj1, room1).
+at(wall_clock, room1).
 at(sofa, room1).
 at(fridge, room1).
 
@@ -69,15 +71,9 @@ current_room(hallway_ground_floor, ground_floor).
 /* Tells the story connected with rooms*/
 
 story_tell(hallway_ground_floor) :- writeln('Should I take a look at items here? - inspect(X)').
-story_tell(keys) :- writeln('Should I take it to inventory? - take(car_keys)').
-story_tell(room1) :- writeln('Shold I take a look at items here? - inspect(X) or to interact(X) to to interact with objects').
-story_tell(fridge) :- writeln('Maybe theres something inside - open_obj(X)'), writeln('Or should I turn it off so it doesnt interfere? - turn_off(X)').
-story_tell(key) :- writeln('Can I open the door with this key? - take(key)').
-story_tell(wardrobe) :- writeln('I need to move it to move on. - move(wardrobe).').
-story_tell(carpet):- writeln('There seems to be something strange here, I should investigate - remove(carpet)').
-story_tell(picture) :- writeln('I saw how in the movies they hid something behind the picture - remove(picture)'), writeln('Or go inspect something else? - inspect(X)').
-story_tell(case) :- writeln('Can I open this case? - try_open(case).').
-story_tell(laptop) :- writeln('Eeeee, I found! - take(laptop)').
+
+story_tell(room1) :- writeln('Should I take a look at items here? - inspect(X)').
+
 story_tell(_) :- nl, !.
 
 /* These rules describe how to pick up an object. */
@@ -94,7 +90,7 @@ take(X) :-
         assert(holding(X)),
         format('You have picked the ~s\n', [X]), !.
 
-take(X) :- 
+take(X) :-
         player_at(Place),
         at(Object, Place),
         in(X, Object),
@@ -126,8 +122,7 @@ tell_objects_at(Place) :-
 
 tell_objects_at(_).
 
-turn_off(X) :-
-	X == fridge,
+turn_off(fridge) :-
 	write('Oooooh noooo.... BoooooM.'), nl,
 	die.
 
@@ -135,15 +130,12 @@ open_obj(X):-
 	player_at(Place),
 	at(X, Place),
 	in(Object, X),
-	write('There is '), 
-	write(Object), 
+	write('There is '),
+	write(Object),
 	write(' in '),
 	write(X), nl,
-	look_at(Object),
+	inspect(Object),
 	nl.
-                                               
-interact(X) :-
-        look_at(X).
 
 drop(X) :-
         timer_check,
@@ -224,7 +216,7 @@ look_around :-
 
 look_around_r(X) :-
         at(Y, X),
-        write('\t -'),
+        write('\t - '),
         (
                 title(Y, R) -> write(R)
         ;
@@ -233,10 +225,6 @@ look_around_r(X) :-
         nl,
         fail.
 look_around_r(_).
-
-look_at(X) :-
-        story_tell(X),
-        nl, !.
 
 /* This rule defines short cut for look_around */
 
@@ -315,8 +303,10 @@ describe(old_chair) :-
 		writeln('Looks like he likes old things, but he doesn''t take care of them. Very well...').
 
 describe(car_keys) :-
-		writeln('Nice ... Besides being a villian, he also has a taste for cars. It''s like'),
-		writeln('a code written at the belt - 1337. It may help me sometime.'), !.
+		writeln('Nice ... Besides being a villain, he also has a taste for cars. It''s like'),
+		writeln('a code written at the belt - 1337. It may help me sometime. Car alarm system '),
+                writeln('system pilot has 2 unlabeled buttons.'),
+                writeln('I definitely shouldn''t use it. (press(left_button|/right_button)'), !.
 
 describe(room1) :-
         write('You are in the first room. Damn, the door to the next room is closed'), nl,
@@ -355,15 +345,21 @@ describe(case) :-
         in(laptop, case),
         writeln('You found a case!'), !.
 
-describe(case) :- writeln('The case has already been opened.'), !.
+describe(laptop) :- writeln('Eeeee, I found! - take(laptop)'), !.
 
-describe(door1) :- writeln('A pine door with a big glass panel. Shall i try opening it? - open(X)'), !.
+describe(pine_door) :- writeln('A pine door with a big glass panel. Shall i try opening it? - open(X)'), !.
+
+describe(oak_door) :- writeln('A Massive internal oak door. Shall i try opening it? - open(X)'), !.
 
 describe(doormat) :- writeln('Good old welcome doormat.'), !.
 
 describe(_) :- writeln('It smells like 404 to me. Something went wrong.'), !.
 
 /* This rule describe how to move objects */
+
+move(_) :-
+        timer_check,
+        fail.
 
 move(wardrobe) :-
         writeln('Oh, it is moving.'),
@@ -376,23 +372,55 @@ move(wardrobe) :-
 move(_) :-
         writeln('I cant move it').
 
-open(door1) :-
+/* These rules describe how to open smth  */
+
+open(pine_door) :-
+        timer_check,
         writeln('creeeeeek...'),
         assert(passage(hallway_ground_floor, room2)),
-        retract(at(door1, hallway_ground_floor)), !.
+        retract(at(pine_door, hallway_ground_floor)), !.
 
-open(door2) :-
+open(oak_door) :-
+        timer_check,
         holding(zinc_key),
-        writeln('Door2 is opened now'),
-        assert(passage(hallway_ground_floor, room2)),
-        retract(at(door2, hallway_ground_floor)), !.
+        writeln('oak_door is opened now'),
+        assert(passage(hallway_ground_floor, corridor_1_floor)),
+        retract(at(oak_door, hallway_ground_floor)), !.
 
-open(door2) :-
+open(oak_door) :-
+        timer_check,
         writeln('Seems like it is locked. I need a key.'),
-        change_title(door2, 'door2 (locked)').
+        change_title(oak_door, 'oak_door (locked)').
 
+open(fridge) :-
+        timer_check,
+        locked(fridge),
+        writeln('Frigde doors are locked, but there is no keyhole.\nIt is supposed to be using electromagnetic lock.'),
+        change_title(fridge, 'fridge (locked)'), !.
+
+open(fridge) :-
+        change_title(fridge, 'fridge (opened)'),
+        writeln('Here is a key. Never thought key should be stored at specific temperature.'), !.
 
 open(_) :- writeln('Not sure if it is possible to open it.'), !.
+
+/* These rules describe how to press buttons */
+
+press(left_button) :-
+        timer_check,
+        once(current_room(hallway_ground_floor, ground_floor)),
+        writeln('Shhh..... Alarm has turned on. Cops will arrive in 5 minutes'),
+        reduce_timer_to(300000), !.
+
+press(right_button) :-
+        timer_check,
+        once(current_room(hallway_ground_floor, ground_floor)),
+        writeln('*click*'),
+        retract(locked(fridge)), !.
+
+press(_) :-
+        timer_check,
+        fail.
 
 o(X) :-
         open(X), !.
