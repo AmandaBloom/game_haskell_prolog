@@ -437,7 +437,7 @@ open(fridge) :-
 open(case, X) :-
         X = 1337,
 	writeln('creeeeek...'),
-	assert(at(laptop, room1)),
+	assert(at(laptop, room4)),
 	inspect(laptop), !.
 
 
