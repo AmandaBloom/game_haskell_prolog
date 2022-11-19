@@ -97,6 +97,13 @@ take(X) :-
         assert(holding(X)),
         format('You have picked the ~s\n', [X]), !.
 
+take(X) :- 
+        (X = fridge; X = wardrobe),
+        player_at(Place),
+        at(X, Place),
+        format('I cant take a ~s\n', [X]),
+        writeln('It''s too heavy'), !.  
+
 take(_) :-
         writeln('I don''t see it here.'), !.
 
