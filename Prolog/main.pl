@@ -41,8 +41,6 @@ at(armchair, room4).
 
 behind(case, picture).
 
-player_at(room4).
-
 in(laptop, case).
 
 hidden(hole, carpet).
@@ -83,6 +81,13 @@ take(X) :-
         writeln('You''re already holding it!'), !.
 
 take(X) :-
+        (X=fridge; X=wardrobe),
+        current_room(Place, _),
+        at(X, Place),
+        format('I cant take a ~s\n', [X]),
+        writeln('It''s too heavy'), !.
+
+take(X) :-
         current_room(Place, _),
         at(X, Place),
         retract(at(X, Place)),
@@ -90,19 +95,12 @@ take(X) :-
         format('You have picked the ~s\n', [X]), !.
 
 take(X) :-
-        player_at(Place),
+        current_room(Place, _),
         at(Object, Place),
         in(X, Object),
         retract(in(X, Object)),
         assert(holding(X)),
         format('You have picked the ~s\n', [X]), !.
-
-take(X) :- 
-        (X = fridge; X = wardrobe),
-        player_at(Place),
-        at(X, Place),
-        format('I cant take a ~s\n', [X]),
-        writeln('It''s too heavy'), !.  
 
 take(_) :-
         writeln('I don''t see it here.'), !.
@@ -219,27 +217,27 @@ look :-
 		story_tell(Place),
 		nl, !.
 
-look_around :-
-        timer_check,
-        current_room(X, _),
-        at(_, X),
-        writeln('Items here:'),
-        look_around_r(X), !.
+% look_around :-
+%         timer_check,
+%         current_room(X, _),
+%         at(_, X),
+%         writeln('Items here:'),
+%         look_around_r(X), !.
 
-look_around :-
-        writeln('There is nothing in here').
+% look_around :-
+%         writeln('There is nothing in here').
 
-look_around_r(X) :-
-        at(Y, X),
-        write('\t - '),
-        (
-                title(Y, R) -> write(R)
-        ;
-                write(Y)
-        ),
-        nl,
-        fail.
-look_around_r(_).
+% look_around_r(X) :-
+%         at(Y, X),
+%         write('\t - '),
+%         (
+%                 title(Y, R) -> write(R)
+%         ;
+%                 write(Y)
+%         ),
+%         nl,
+%         fail.
+% look_around_r(_).
 
 /* This rule defines short cut for look_around */
 
@@ -396,7 +394,7 @@ move(_) :-
 /* These rules describe how to open smth  */
 
 open_obj(X):-
-	player_at(Place),
+	current_room(Place, _),
 	at(X, Place),
 	in(Object, X),
 	write('There is '),
