@@ -3,11 +3,13 @@
 :- ensure_loaded(navigation).
 :- ensure_loaded(timer).
 
-:- dynamic position/2, holding/1, behind/2,  current_room/2, at/2, in/2, story_tell/1, passage/2, title/2, key/1, locked/1.
+:- dynamic position/2, case_status/1, picture/1, holding/1, behind/2,  current_room/2, at/2, in/2, story_tell/1, passage/2, title/2, key/1, locked/1.
 :- retractall(at(_, _)), retractall(current_room(_, _)), retractall(alive(_)), retractall(passage(_, _)), retractall(title(_, _)),
         retractall(key(_)).
 
 locked(fridge).
+case_status(closed).
+picture(onwall).
 
 % at(thing, someplace).
 /* hallway_ground_floor */
@@ -385,6 +387,8 @@ move(wardrobe) :-
         change_title(wardrobe, 'wardrobe (moved)'), !.
 
 move(picture) :-
+        retract(picture(onwall)),
+        assert(picture(onfloor)),
         writeln('I removed this shame from the wall!'),
 	assert(at(picture, room1)),
 	retract(behind(case, picture)), !.
@@ -436,10 +440,17 @@ open(fridge) :-
 
 open(case, X) :-
         X = 1337,
-	writeln('creeeeek...'),
-	assert(at(laptop, room4)),
-	inspect(laptop), !.
+        retract(case_status(closed)),
+        assert(case_status(opened)),
+        assert(at(laptop, room1)),
+        writeln('creeeeek...'),
+        inspect(laptop), !.
 
+open(case, X) :-
+        X = 1337,
+        assert(case_status(closed)),
+        retract(case_status(closed)),
+        writeln('Case is already open!'), !.
 
 open(_) :- writeln('Not sure if it is possible to open it.'), !.
 
