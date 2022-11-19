@@ -3,7 +3,7 @@
 :- ensure_loaded(navigation).
 :- ensure_loaded(timer).
 
-:- dynamic position/2, holding/1, restract/1, behind/2,  current_room/2, at/2, in/2, story_tell/1, passage/2, title/2, key/1, locked/1.
+:- dynamic position/2, holding/1, behind/2,  current_room/2, at/2, in/2, story_tell/1, passage/2, title/2, key/1, locked/1.
 :- retractall(at(_, _)), retractall(current_room(_, _)), retractall(alive(_)), retractall(passage(_, _)), retractall(title(_, _)),
         retractall(key(_)).
 
@@ -149,26 +149,6 @@ turn_off(fridge) :-
 	write('Oooooh noooo.... BoooooM.'), nl,
 	die.
 
-open_obj(X):-
-	player_at(Place),
-	at(X, Place),
-	in(Object, X),
-	write('There is '),
-	write(Object),
-	write(' in '),
-	write(X), nl,
-	inspect(Object),
-	nl.
-
-try_open(X):-
-	X = 13,
-	writeln('creeeeek...'),
-	assert(in(laptop, case)),
-	retract(in(laptop, case)),
-	inspect(laptop), !.
-
-try_open(_):-
-	writeln('Invalid password').
 
 /* These rules describe how to put down an object. */
 
@@ -379,7 +359,7 @@ describe(picture) :- writeln('The picture was kind of weird. This was a screensh
 
 describe(case) :-
         in(laptop, case),
-        writeln('You found a case!'), !.
+        writeln('You found a case! You need to enter a two-digit number.'), !.
 
 describe(laptop) :- writeln('Eeeee, I found! - take(laptop)'), !.
 
@@ -414,6 +394,28 @@ move(_) :-
         writeln('I cant move it').
 
 /* These rules describe how to open smth  */
+
+open_obj(X):-
+	player_at(Place),
+	at(X, Place),
+	in(Object, X),
+	write('There is '),
+	write(Object),
+	write(' in '),
+	write(X), nl,
+	inspect(Object),
+	nl.
+
+try_open(X):-
+	X = 13,
+	writeln('creeeeek...'),
+	assert(in(laptop, case)),
+	retract(in(laptop, case)),
+	inspect(laptop), !.
+
+try_open(_):-
+	writeln('Invalid password').
+
 
 open(pine_door) :-
         timer_check,
