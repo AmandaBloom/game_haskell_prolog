@@ -43,7 +43,6 @@ behind(case, picture).
 
 player_at(room1).
 
-in(key, fridge).
 in(laptop, case).
 
 hidden(hole, carpet).
@@ -106,7 +105,7 @@ take(_) :-
 t(X) :-
         take(X).
 
-/* These rules describe how to put down an object. */
+/* These rules describe how to write out objects at place. */
 
 tell_objects_at(Place) :-
         timer_check,
@@ -118,9 +117,26 @@ tell_objects_at(Place) :-
                 write(X)
         ),
         write(' in this place. '), nl,
+        tell_objects_in(X),
         fail.
 
 tell_objects_at(_).
+
+/* These rules describe how to write out objects in object. */
+
+tell_objects_in(Obj) :-
+        timer_check,
+        in(X, Obj),
+        write('\tWe gotta '),
+        (
+                title(X, R) -> write(R)
+        ;
+                write(X)
+        ),
+        format(' in ~s.', [Obj]), nl,
+        fail.
+
+tell_objects_in(_).
 
 turn_off(fridge) :-
 	write('Oooooh noooo.... BoooooM.'), nl,
@@ -136,6 +152,8 @@ open_obj(X):-
 	write(X), nl,
 	inspect(Object),
 	nl.
+
+/* These rules describe how to put down an object. */
 
 drop(X) :-
         timer_check,
@@ -237,7 +255,7 @@ inspect(doormat) :-
         timer_check,
         describe(doormat),
         writeln('Here is a key. Shall i pick i up? - take(X)'),
-        assert(at(zinc_key, hallway_ground_floor)), !.
+        assert(in(zinc_key, doormat)), !.
 
 inspect(X) :-
         timer_check,
@@ -266,6 +284,7 @@ help :-
         writeln('Available commands are:'),
         writeln('start. / s.                -- Start the game.'),
         writeln('go(Room)                   -- Enter the room.'),
+        writeln('back. / b.                 -- Enter the previous room.'),
         writeln('find_passages. / fp.       -- Find available passages.'),
         writeln('take(Object). / t(O).      -- Pick up an object.'),
         writeln('drop(Object). / d(O).      -- Put down an object.'),
@@ -400,7 +419,8 @@ open(fridge) :-
 
 open(fridge) :-
         change_title(fridge, 'fridge (opened)'),
-        writeln('Here is a key. Never thought key should be stored at specific temperature.'), !.
+        writeln('Here is a key. Never thought key should be stored at specific temperature.'),
+        in(key, fridge), !.
 
 open(_) :- writeln('Not sure if it is possible to open it.'), !.
 

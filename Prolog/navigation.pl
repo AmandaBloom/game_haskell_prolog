@@ -1,5 +1,8 @@
 /* These rules describe current location */
 
+:- dynamic passage_stack/1.
+:- retractall(passage_stack(_)).
+
 where :-
         timer_check,
         current_room(Room, Floor),
@@ -42,11 +45,26 @@ go(X) :-
         timer_check,
         current_room(Y, _),
         once((passage(Y, X); passage(X, Y))),
+        go_(X),
+        assert(passage_stack(Y)), !.
+
+go(_) :-
+        writeln('I you cannot go there').
+
+go_(X) :-
         retractall(current_room(_, _)),
         floor(X, Z),
         assert(current_room(X, Z)),
         format('Welcome to the ~s\n\n', [X]),
         look, !.
 
-go(_) :-
-        writeln('I you cannot go there').
+back :-
+        passage_stack(_),
+        findall(X, passage_stack(X), Stack),
+        last(Stack, Back),
+        retract(passage_stack(Back)),
+        go_(Back), !.
+
+back :-
+        writeln('There is no way back').
+
