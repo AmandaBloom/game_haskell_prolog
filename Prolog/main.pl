@@ -3,7 +3,7 @@
 :- ensure_loaded(navigation).
 :- ensure_loaded(timer).
 
-:- dynamic position/2, holding/1, current_room/2, at/2, in/2, story_tell/1, passage/2, title/2, key/1, locked/1.
+:- dynamic position/2, holding/1, restract/1, behind/2,  current_room/2, at/2, in/2, story_tell/1, passage/2, title/2, key/1, locked/1.
 :- retractall(at(_, _)), retractall(current_room(_, _)), retractall(alive(_)), retractall(passage(_, _)), retractall(title(_, _)),
         retractall(key(_)).
 
@@ -41,7 +41,7 @@ at(armchair, room4).
 
 behind(case, picture).
 
-player_at(room1).
+player_at(room4).
 
 in(laptop, case).
 
@@ -159,6 +159,16 @@ open_obj(X):-
 	write(X), nl,
 	inspect(Object),
 	nl.
+
+try_open(X):-
+	X = 13,
+	writeln('creeeeek...'),
+	assert(in(laptop, case)),
+	retract(in(laptop, case)),
+	inspect(laptop), !.
+
+try_open(_):-
+	writeln('Invalid password').
 
 /* These rules describe how to put down an object. */
 
@@ -365,7 +375,7 @@ describe(carpet) :- writeln('Great modern carpet. The truth does not fit into th
 
 describe(armchair) :- writeln('A chair is like a chair. lol what else to say'), !.
 
-describe(picture) :- writeln('The picture was kind of weird. This was a screenshot of the top 13 in PUBG solo'), !.
+describe(picture) :- writeln('The picture was kind of weird. This was a screenshot of the top 13 in PUBG solo' - move(picture)), !.
 
 describe(case) :-
         in(laptop, case),
@@ -394,6 +404,11 @@ move(wardrobe) :-
         assert(passage(corridor_1_floor, room4)),
         retract(at(wardrobe, corridor_1_floor)), nl,
         inspect(corridor_1_floor).
+
+move(picture) :-
+	assert(at(picture, room4)),
+	retract(behind(case, picture)),
+	inspect(case), !.
 
 move(_) :-
         writeln('I cant move it').
