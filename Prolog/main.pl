@@ -37,7 +37,7 @@ at(carpet, room3).
 
 /* room4 */
 
-at(picture, room1).
+at(picture, room4).
 at(table, room4).
 at(armchair, room4).
 
@@ -362,7 +362,7 @@ describe(armchair) :- writeln('A chair is like a chair. lol what else to say'), 
 describe(picture) :- writeln('The picture was kind of weird. This was a screenshot of the top 13 in PUBG solo' - move(picture)), !.
 
 describe(case) :-
-        writeln('You found a case! You need to enter a four-digit number.'), !.
+        writeln('You found a case! You need to enter a four-digit number. To open this case.'), !.
 
 describe(laptop) :- writeln('Eeeee, I found! - take(laptop)'), !.
 
@@ -390,7 +390,7 @@ move(picture) :-
         retract(picture(onwall)),
         assert(picture(onfloor)),
         writeln('I removed this shame from the wall!'),
-	assert(at(picture, room1)),
+	assert(at(picture, room4)),
 	retract(behind(case, picture)), !.
 
 move(_) :-
@@ -442,7 +442,7 @@ open(case, X) :-
         X = 1337,
         retract(case_status(closed)),
         assert(case_status(opened)),
-        assert(at(laptop, room1)),
+        assert(at(laptop, room4)),
         writeln('creeeeek...'),
         inspect(laptop), !.
 
