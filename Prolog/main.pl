@@ -361,7 +361,7 @@ describe(picture) :- writeln('The picture was kind of weird. This was a screensh
 
 describe(case) :-
         in(laptop, case),
-        writeln('You found a case! You need to enter a two-digit number.'), !.
+        writeln('You found a case! You need to enter a four-digit number.'), !.
 
 describe(laptop) :- writeln('Eeeee, I found! - take(laptop)'), !.
 
@@ -434,6 +434,13 @@ open(fridge) :-
         change_title(fridge, 'fridge (opened)'),
         writeln('Here is a key. Never thought key should be stored at specific temperature.'),
         in(key, fridge), !.
+
+open(case, X) :-
+        X = 1337,
+	writeln('creeeeek...'),
+	assert(at(laptop, room4)),
+	inspect(laptop), !.
+
 
 open(_) :- writeln('Not sure if it is possible to open it.'), !.
 
