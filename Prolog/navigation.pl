@@ -25,7 +25,7 @@ floor(Room) :-
 find_passages :-
         timer_check,
         current_room(Room, _),
-        writeln('From here you cat go to:'),
+        writeln('From here you can go to:'),
         find_passages_r(Room), !.
 
 find_passages_r(Room) :-

@@ -55,6 +55,7 @@ floor(room2, ground_floor).
 floor(corridor_1_floor, first_floor).
 floor(room3, first_floor).
 floor(room4, first_floor).
+floor(room5, first_floor).
 
 /* Describe paths to rooms */
 
@@ -330,7 +331,7 @@ describe(room2) :- write('It''s so empty here, like after a robbery'), nl, !.
 
 describe(corridor_1_floor) :-
         at(wardrobe, corridor_1_floor),
-        write('Ooooh no, a big wardrobe is right in my path'), nl, !.
+        write('Hmm, what a fancy wardrobe is right in my path'), nl, !.
 
 describe(corridor_1_floor) :-
         write('Oooh, now I can move on'), nl, !.
@@ -340,6 +341,9 @@ describe(room3) :- writeln(''), !.
 describe(room4) :-
         write('Small room.'), nl,
         write('There was a work table and an armchair in the room, and a picture hung on the wall.'), nl, !.
+
+describe(room5) :-
+        writeln('room5 ¯\\_(ツ)_/¯').
 
 describe(fridge) :- writeln('Oooh, it''s time to update this old refrigerator. Buzzing like a plane on the runway'), !.
 
@@ -378,10 +382,8 @@ move(_) :-
 move(wardrobe) :-
         writeln('Oh, it is moving.'),
         writeln('Here are doors!'),
-        assert(passage(corridor_1_floor, room3)),
-        assert(passage(corridor_1_floor, room4)),
-        retract(at(wardrobe, corridor_1_floor)), nl,
-        inspect(corridor_1_floor).
+        assert(passage(corridor_1_floor, room5)),
+        change_title(wardrobe, 'wardrobe (moved)'), !.
 
 move(picture) :-
 	assert(at(picture, room4)),
@@ -403,17 +405,6 @@ open_obj(X):-
 	write(X), nl,
 	inspect(Object),
 	nl.
-
-try_open(X):-
-	X = 13,
-	writeln('creeeeek...'),
-	assert(in(laptop, case)),
-	retract(in(laptop, case)),
-	inspect(laptop), !.
-
-try_open(_):-
-	writeln('Invalid password').
-
 
 open(pine_door) :-
         timer_check,
