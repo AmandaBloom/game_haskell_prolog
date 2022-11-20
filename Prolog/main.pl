@@ -3,12 +3,13 @@
 :- ensure_loaded(navigation).
 :- ensure_loaded(timer).
 
-:- dynamic position/2, case_status/1, picture/1, holding/1, behind/2,  current_room/2, at/2, in/2, story_tell/1, passage/2, title/2, key/1, locked/1.
-:- retractall(at(_, _)), retractall(current_room(_, _)), retractall(alive(_)), retractall(passage(_, _)), retractall(title(_, _)),
-        retractall(key(_)).
+:- dynamic position/2, picture/1, holding/1, behind/2,  current_room/2, at/2, in/2, story_tell/1, passage/2,
+        title/2, key/1, locked/1.
+:- retractall(at(_, _)), retractall(current_room(_, _)), retractall(alive(_)), retractall(passage(_, _)),
+        retractall(title(_, _)), retractall(key(_)).
 
 locked(fridge).
-case_status(closed).
+locked(case).
 picture(onwall).
 
 % at(thing, someplace).
@@ -41,7 +42,6 @@ at(picture, room4).
 at(table, room4).
 at(armchair, room4).
 
-behind(case, picture).
 
 in(laptop, case).
 
@@ -126,11 +126,12 @@ tell_objects_at(Place) :-
         ),
         write(' in this place. '), nl,
         tell_objects_in(X),
+        tell_objects_behind(X),
         fail.
 
 tell_objects_at(_).
 
-/* These rules describe how to write out objects in object. */
+/* These rules describe how to write out objects 'in' object. */
 
 tell_objects_in(Obj) :-
         timer_check,
@@ -145,6 +146,22 @@ tell_objects_in(Obj) :-
         fail.
 
 tell_objects_in(_).
+
+/* These rules describe how to write out objects 'behind' object. */
+
+tell_objects_behind(Obj) :-
+        timer_check,
+        behind(X, Obj),
+        write('\tWe gotta '),
+        (
+                title(X, R) -> write(R)
+        ;
+                write(X)
+        ),
+        format(' behind ~s.', [Obj]), nl,
+        fail.
+
+tell_objects_behind(_).
 
 turn_off(fridge) :-
 	write('Oooooh noooo.... BoooooM.'), nl,
@@ -390,8 +407,7 @@ move(picture) :-
         retract(picture(onwall)),
         assert(picture(onfloor)),
         writeln('I removed this shame from the wall!'),
-	assert(at(picture, room4)),
-	retract(behind(case, picture)), !.
+	assert(behind(case, picture)), !.
 
 move(_) :-
         writeln('I cant move it').
@@ -438,21 +454,22 @@ open(fridge) :-
         writeln('Here is a key. Never thought key should be stored at specific temperature.'),
         in(key, fridge), !.
 
-open(case, X) :-
-        X = 1337,
-        retract(case_status(closed)),
-        assert(case_status(opened)),
-        assert(at(laptop, room4)),
-        writeln('creeeeek...'),
-        inspect(laptop), !.
+open(_) :- writeln('Not sure if it is possible to open it.'), !.
 
-open(case, X) :-
-        X = 1337,
+open(case, 1337) :-
+        retract(locked(case)),
+        assert(in(laptop, case)),
+        writeln('*click*'), !.
+
+open(case, 1337) :-
         assert(case_status(closed)),
         retract(case_status(closed)),
         writeln('Case is already open!'), !.
 
-open(_) :- writeln('Not sure if it is possible to open it.'), !.
+open(case, _) :-
+        writeln('Beep-beep-beep'), !.
+
+open(_, _) :- writeln('Not sure if it is possible to open it.'), !.
 
 /* These rules describe how to press buttons */
 
