@@ -393,9 +393,12 @@ describe(_) :- writeln('It smells like 404 to me. Something went wrong.'), !.
 
 /* This rule describe how to move objects */
 
-move(_) :-
+move(X) :-
         timer_check,
-        fail.
+        current_room(Y, _),
+        at(X, Z),
+        (Y==Z -> fail; !),
+        writeln('Cannot find it here.'), !.
 
 move(wardrobe) :-
         writeln('Oh, it is moving.'),
