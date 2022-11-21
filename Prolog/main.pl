@@ -18,25 +18,33 @@ story_tell(hallway_ground_floor) :- writeln('Should I take a look at items here?
 
 story_tell(room1) :- writeln('Should I take a look at items here?').
 
-story_tell(hole) :- die.
-
 story_tell(_) :- nl, !.
 
-/* This rule write out content of invertory */
+/* This rule enforce players to start game before performing an action */
 
-invertory :-
-        timer_check,
-        holding(_),
-        invertory_r, !.
+check_alive :-
+        alive(player),
+        timer_check, !.
 
-invertory :-
-        write('You inventory in empty').
+check_alive :-
+        writeln('You should start the game first.'), !.
 
-invertory_r :-
-        holding(X),
-        writeln(X),
-        fail.
-invertory_r.
+
+/* This rule describe how to leave house */
+
+outside :-
+        holding(laptop),
+        writeln('Congratulation, Mission completed.'),
+        tl,
+        writeln('Enter "halt" to exit.'),
+        retractall(alive(_)), !.
+
+
+outside :-
+        writeln('You had not found the laptop. Mission failed.'),
+        die.
+
+/* This rule describe how to change title of an object */
 
 change_title(Obj, Title) :-
         retractall(title(Obj, _)),
@@ -61,15 +69,12 @@ introduction :-
         write('You''re into the hallway_ground_floor. On the small table there''s note - it says'),
         write('he will be back soon, so you have 10 minutes to leave the house, hurry up '), nl.
 
-/* This rule defines short cut to call invertory  */
-
-i :-
-        invertory.
 
 
 /* This rule tells how to die. */
 
 die :-
+        retractall(alive(_)),
         finish.
 
 /* Under UNIX, the "halt." command quits Prolog but does not
@@ -79,8 +84,12 @@ die :-
 
 finish :-
         nl,
-        write('The game is over. Please enter the "halt." command.'),
-        nl.
+        writeln('The game is over.'),
+        time_left,
+        writeln('Available commands are:'),
+        writeln('start. / s.                -- Restart the game.'),
+        writeln('halt.                      -- Exit.'),
+        abort, !.
 
 /* This rule just writes out game instructions. */
 
@@ -96,7 +105,10 @@ help :-
         writeln('inventory. / i.            -- Check invertory.'),
         writeln('look. / l.                 -- Look around you again.'),
         writeln('inspect(Object)            -- Look at smth in room'),
+        writeln('open(Object)               -- Open at smth in room'),
         writeln('move(Object)               -- Move at smth in room'),
+        writeln('turn_off(Object)           -- Turn smth off.'),
+        writeln('press(Button)              -- Press the button.'),
         writeln('time_left / tl.            -- Сheck how much time is left'),
         writeln('help.                      -- See this message again.'),
         writeln('halt.                      -- End the game and quit.'),
@@ -110,7 +122,6 @@ start :-
         start_timer(600000),
         introduction,
         help,
-        assert(current_room(hallway_ground_floor, ground_floor)),
         look.
 
 /* This rule defines short cut for start */

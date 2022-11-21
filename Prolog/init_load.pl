@@ -3,6 +3,7 @@ init_load :-
         retractall(at(_, _)),  retractall(in(_, _)), retractall(behind(_, _)), retractall(floor(_, _)),
         retractall(locked(_)), retractall(picture(_)),
 
+        assert(alive(player)),
         assert(locked(fridge)),
         assert(locked(case)),
         assert(picture(onwall)),
@@ -54,6 +55,7 @@ init_load :-
 
         /* Describe floor where room is located */
 
+        assert(floor(outside, ground_floor)),
         assert(floor(hallway_ground_floor, ground_floor)),
         assert(floor(room1, ground_floor)),
         assert(floor(room2, ground_floor)),
@@ -66,7 +68,11 @@ init_load :-
 
         /* Describe paths to rooms */
 
+        assert(passage(hallway_ground_floor, outside)),
         assert(passage(hallway_ground_floor, room1)),
         assert(passage(corridor_1_floor, room3)),
         assert(passage(corridor_1_floor, room4)),
+
+        assert(current_room(hallway_ground_floor, ground_floor)),
+
         !.

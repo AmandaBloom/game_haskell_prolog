@@ -1,7 +1,32 @@
 /* These rules describe how to pick up an object. */
 
+/* This rule write out content of invertory */
+
+invertory :-
+        check_alive,
+        holding(_),
+        invertory_r, !.
+
+invertory :-
+        write('You inventory in empty').
+
+invertory_r :-
+        holding(X),
+        writeln(X),
+        fail.
+invertory_r.
+
+
+/* This rule defines short cut to call invertory  */
+
+i :-
+        invertory.
+
+
+/* These rules describe how to take objects */
+
 take(X) :-
-        timer_check,
+        check_alive,
         holding(X),
         writeln('You''re already holding it!'), !.
 
@@ -39,7 +64,7 @@ t(X) :-
 /* These rules describe how to write out objects at place. */
 
 tell_objects_at(Place) :-
-        timer_check,
+        check_alive,
         at(X, Place),
         write('We gotta '),
         (
@@ -58,7 +83,6 @@ tell_objects_at(_).
 /* These rules describe how to write out objects 'in' object. */
 
 tell_objects_in(Obj) :-
-        timer_check,
         in(X, Obj),
         write('\tWe gotta '),
         (
@@ -75,7 +99,6 @@ tell_objects_in(_).
 /* These rules describe how to write out objects 'behind' object. */
 
 tell_objects_behind(Obj) :-
-        timer_check,
         behind(X, Obj),
         write('\tWe gotta '),
         (
@@ -97,7 +120,7 @@ turn_off(fridge) :-
 /* These rules describe how to put down an object. */
 
 drop(X) :-
-        timer_check,
+        check_alive,
         holding(X),
         current_room(Place, _),
         retract(holding(X)),
@@ -117,13 +140,13 @@ d(X) :-
 /* This rule describes how to check items around */
 
 look :-
-        timer_check,
+        check_alive,
 	current_room(Place, _),
-		describe(Place),nl,
-                find_passages, nl,
-		tell_objects_at(Place),
-		story_tell(Place),
-		nl, !.
+        describe(Place),nl,
+        find_passages, nl,
+        tell_objects_at(Place),
+        story_tell(Place),
+        nl, !.
 
 /* This rule defines short cut to call look  */
 
@@ -134,8 +157,7 @@ l :-
 /* Take a look at object */
 
 inspect(_) :-
-        timer_check,
-        fail.
+        check_alive, fail.
 
 inspect(doormat) :-
         describe(doormat),
@@ -154,7 +176,7 @@ inspect(X) :-
 /* This rule describe how to move objects */
 
 move(X) :-
-        timer_check,
+        check_alive,
         current_room(Y, _),
         at(X, Z),
         (Y==Z -> fail; !),
@@ -167,8 +189,11 @@ move(wardrobe) :-
         change_title(wardrobe, 'wardrobe (moved)'), !.
 
 move(picture) :-
+        picture(onwall),
+        writeln('It is already moved.'), !.
+
+move(picture) :-
         retract(picture(onwall)),
-        assert(picture(onfloor)),
         writeln('I removed this shame from the wall!'),
 	assert(at(case, room4)), !.
 
@@ -182,31 +207,30 @@ move(_) :-
 
 /* These rules describe how to open smth  */
 
+open(_) :-
+        check_alive,
+        fail.
+
 open(pine_door) :-
-        timer_check,
         writeln('creeeeeek...'),
         assert(passage(hallway_ground_floor, room2)),
         retract(at(pine_door, hallway_ground_floor)), !.
 
 open(oak_door) :-
-        timer_check,
         holding(zinc_key),
         writeln('oak_door is opened now'),
         assert(passage(hallway_ground_floor, corridor_1_floor)),
         retract(at(oak_door, hallway_ground_floor)), !.
 
 open(oak_door) :-
-        timer_check,
         writeln('Seems like it is locked. I need a key.'),
         change_title(oak_door, 'oak_door (locked)').
 
 open(fiberboard_door) :-
-        timer_check,
         writeln('Locked.'),
         change_title(oak_door, 'fiberboard_door (locked)').
 
 open(fridge) :-
-        timer_check,
         locked(fridge),
         writeln('Frigde doors are locked, but there is no keyhole.\nIt is supposed to be using electromagnetic lock.'),
         change_title(fridge, 'fridge (locked)'), !.
@@ -220,6 +244,10 @@ open(case) :-
         writeln('Enter PIN please - open(case, PIN).'), !.
 
 open(_) :- writeln('Not sure if it is possible to open it.'), !.
+
+open(_, _) :-
+        check_alive,
+        fail.
 
 open(case, 1337) :-
         retract(locked(case)),
@@ -244,18 +272,16 @@ o(X) :-
 
 /* These rules describe how to press buttons */
 
+press(_) :-
+        check_alive,
+        fail.
+
 press(left_button) :-
-        timer_check,
         once(current_room(hallway_ground_floor, ground_floor)),
         writeln('Shhh..... Alarm has turned on. Cops will arrive in 5 minutes'),
         reduce_timer_to(300000), !.
 
 press(right_button) :-
-        timer_check,
         once(current_room(hallway_ground_floor, ground_floor)),
         writeln('*click*'),
         retract(locked(fridge)), !.
-
-press(_) :-
-        timer_check,
-        fail.

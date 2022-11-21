@@ -8,7 +8,7 @@ where :-
         current_room(Room, Floor),
         write(Room),
         write(' | '),
-        write(Floor).
+        write(Floor), !.
 
 floor :-
         timer_check,
@@ -41,8 +41,16 @@ fp :-
 
 /* This rule descibes how to go to another room */
 
+go(_) :-
+        check_alive, fail.
+
+go(hole) :-
+        die, !.
+
+go(outside) :-
+        outside, !.
+
 go(X) :-
-        timer_check,
         current_room(Y, _),
         once((passage(Y, X); passage(X, Y))),
         go_(X),
