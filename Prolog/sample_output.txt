@@ -1,0 +1,535 @@
+Welcome to SWI-Prolog (threaded, 64 bits, version 8.4.3)
+SWI-Prolog comes with ABSOLUTELY NO WARRANTY. This is free software.
+Please run ?- license. for legal details.
+
+For online help and background, visit https://www.swi-prolog.org
+For built-in help, use ?- help(Topic). or ?- apropos(Word).
+
+?- [main].
+true.
+
+?- start.
+
+Welcome Agent!. The world is a dangerous place. Mister Zero wants to make it
+even worse. Our intelligence has proven he has nuclear codes and he's gonna
+use them to destroy The World. That's why you were sent to his house. Search
+for the Laptop with codes and protect our future...
+Be quick, he is gonna come back in any time... 
+.....
+..........
+...............Agent Of Fortune Game.....
+..........
+.....
+Finally... You entered Mister Zero's crib. Front door appears to be intact.
+You're into the hallway_ground_floor. On the small table there's note - it sayshe will be back soon, so you have 10 minutes to leave the house, hurry up 
+Enter commands using standard Prolog syntax.
+Available commands are:
+start. / s.                -- Start the game.
+go(Room)                   -- Enter the room.
+back. / b.                 -- Enter the previous room.
+find_passages. / fp.       -- Find available passages.
+take(Object). / t(O).      -- Pick up an object.
+drop(Object). / d(O).      -- Put down an object.
+inventory. / i.            -- Check inventory.
+look. / l.                 -- Look around you again.
+inspect(Object)            -- Look at smth in room
+open(Object)               -- Open at smth in room
+move(Object)               -- Move at smth in room
+turn_off(Object)           -- Turn smth off.
+press(Button)              -- Press the button.
+time_left / tl.            -- Check how much time is left
+help.                      -- See this message again.
+halt.                      -- End the game and quit.
+
+I'm in hallway_ground_floor
+What a long corridor. For a long time Mister Zero hasn't done cleaning here.
+What huge spiders are sitting on the ceiling
+
+From here you can go to:
+         - outside
+         - room1
+
+We gotta old_chair in this place. 
+We gotta car_keys in this place. 
+We gotta doormat in this place. 
+We gotta pine_door in this place. 
+We gotta oak_door in this place. 
+We gotta fiberboard_door in this place. 
+Should I take a look at items here?
+
+true.
+
+?- inspect(old_chair).
+Looks like he likes old things, but he doesn't take care of them. Very well...
+true.
+
+?- inspect(car_keys).
+Nice ... Besides being a villain, he also has a taste for cars. It's like
+a code written at the belt - 1337. It may help me sometime. 
+Car Alarm System pilot has 2 unlabeled buttons.
+I definitely shouldn't use it. (press(left_button|/right_button)
+true.
+
+?- press(right_button).
+*click*
+true.
+
+?- inspect(doormat).
+Good old welcome doormat.
+Here is a zinc_key. Shall i pick it up?
+true.
+
+?- take(zinc_key).
+You have picked the zinc_key
+true.
+
+?- open(pine_door).
+creeeeeek...
+true.
+
+?- open(fiberboard_door).
+Locked. Maybe the lead to nowhere...
+true.
+
+?- open(oak_door).
+oak_door is opened now
+true.
+
+?- l.
+I'm in hallway_ground_floor
+What a long corridor. For a long time Mister Zero hasn't done cleaning here.
+What huge spiders are sitting on the ceiling
+
+From here you can go to:
+         - outside
+         - room1
+         - room2
+         - corridor_1_floor
+
+We gotta old_chair in this place. 
+We gotta car_keys in this place. 
+We gotta doormat in this place. 
+We gotta fiberboard_door in this place. 
+Should I take a look at items here?
+
+true.
+
+?- go(room2).
+Welcome to the room2
+
+It's so empty here, like after a robbery
+
+From here you can go to:
+         - hallway_ground_floor
+
+
+
+true.
+
+?- go(hallway_ground_floor).
+Welcome to the hallway_ground_floor
+
+I'm in hallway_ground_floor
+What a long corridor. For a long time Mister Zero hasn't done cleaning here.
+What huge spiders are sitting on the ceiling
+
+From here you can go to:
+         - outside
+         - room1
+         - room2
+         - corridor_1_floor
+
+We gotta old_chair in this place. 
+We gotta car_keys in this place. 
+We gotta doormat in this place. 
+We gotta fiberboard_door in this place. 
+Should I take a look at items here?
+
+true.
+
+?- go(room1).
+Welcome to the room1
+
+You are in the first room. Damn, the door to the next room is closed
+I have to find the key to the door to open the door to the second room.
+
+From here you can go to:
+         - hallway_ground_floor
+
+We gotta wall_clock in this place. 
+We gotta sofa in this place. 
+We gotta fridge in this place. 
+We gotta stove in this place. 
+Should I take a look at items here?
+
+true.
+
+?- inspect(wall_clock).
+It ain't working from 1:37. Maybe its a sign???
+true.
+
+?- inspect(sofa).
+What an old shabby sofa. How can you sit on it?
+true.
+
+?- inspect(fridge).
+Oooh, it's time to update this old refrigerator. Buzzing like a plane on the runway
+Here is a key. Shall i pick it up?
+true.
+
+?- take(key).
+You have picked the key
+true.
+
+?- l.
+You are in the first room. Damn, the door to the next room is closed
+I have to find the key to the door to open the door to the second room.
+
+From here you can go to:
+         - hallway_ground_floor
+
+We gotta wall_clock in this place. 
+We gotta sofa in this place. 
+We gotta fridge in this place. 
+We gotta stove in this place. 
+Should I take a look at items here?
+
+true.
+
+?- go(hallway_ground_floor).
+Welcome to the hallway_ground_floor
+
+I'm in hallway_ground_floor
+What a long corridor. For a long time Mister Zero hasn't done cleaning here.
+What huge spiders are sitting on the ceiling
+
+From here you can go to:
+         - outside
+         - room1
+         - room2
+         - corridor_1_floor
+
+We gotta old_chair in this place. 
+We gotta car_keys in this place. 
+We gotta doormat in this place. 
+We gotta fiberboard_door in this place. 
+Should I take a look at items here?
+
+true.
+
+?- go(corridor_1_floor).
+Welcome to the corridor_1_floor
+
+Hmm, what a fancy wardrobe is right in my path
+
+From here you can go to:
+         - hallway_ground_floor
+         - room3
+         - room4
+
+We gotta wardrobe in this place. 
+
+
+true.
+
+?- i.
+zinc_key
+key
+true.
+
+?- move(wardrobe).
+Oh, it is moving.
+Here is passage to another room, but no doors.!
+true.
+
+?- l.
+Hmm, what a fancy wardrobe is right in my path
+
+From here you can go to:
+         - hallway_ground_floor
+         - room3
+         - room4
+         - room5
+
+We gotta wardrobe (moved) in this place. 
+
+
+true.
+
+?- go(room3).
+Welcome to the room3
+
+All the wall a covered with acoustic boards in this room.
+
+From here you can go to:
+         - corridor_1_floor
+
+We gotta carpet in this place. 
+We gotta music_stand in this place. 
+We gotta acoustic_guitar in this place. 
+We gotta poster in this place. 
+
+
+true.
+
+?- inspect(carpet).
+Great modern carpet. The truth does not fit into the interior of the house a little, looks suspicious.
+true.
+
+?- move(carpet).
+Never thought it is so heavy.
+true.
+
+?- l.
+All the wall a covered with acoustic boards in this room.
+
+From here you can go to:
+         - corridor_1_floor
+
+We gotta carpet in this place. 
+        We gotta hole behind carpet.
+We gotta music_stand in this place. 
+We gotta acoustic_guitar in this place. 
+We gotta poster in this place. 
+
+
+true.
+
+?- inspect(hole).
+This hole is as dark as a black hole
+true.
+
+?- inspect(music_stand).
+Music stand with some sheets.
+true.
+
+?- inspect(acoustic_guitar).
+Some strings are missings.
+true.
+
+?- inspect(poster).
+Metallica poster with a dark falcon on it.
+true.
+
+?- l.
+All the wall a covered with acoustic boards in this room.
+
+From here you can go to:
+         - corridor_1_floor
+         - hole
+
+We gotta carpet in this place. 
+We gotta music_stand in this place. 
+We gotta acoustic_guitar in this place. 
+We gotta poster in this place. 
+
+
+true.
+
+?- go(corridor_1_floor).
+Welcome to the corridor_1_floor
+
+Hmm, what a fancy wardrobe is right in my path
+
+From here you can go to:
+         - hallway_ground_floor
+         - room3
+         - room4
+         - room5
+
+We gotta wardrobe (moved) in this place. 
+
+
+true.
+
+?- go(room5).
+Welcome to the room5
+
+room5, it seems like it's his office
+
+From here you can go to:
+         - corridor_1_floor
+
+We gotta litter_box in this place. 
+We gotta cat (sleeping) in this place. 
+We gotta beanbag_chair in this place. 
+We gotta scratching_post in this place. 
+
+
+true.
+
+?- inspect(litter_box).
+Blue litter box with sand. Fortunately with no wastes.
+true.
+
+?- inspect(cat).
+Black cat with white paws and belly. It still sleep even when I opened door.
+true.
+
+?- inspect(beanbag_chair).
+Big beanbag chair full covered in cat hair.
+true.
+
+?- inspect(scratching_post).
+Cat claw scratcher with hanging ball.
+true.
+
+?- l.
+room5, it seems like it's his office
+
+From here you can go to:
+         - corridor_1_floor
+
+We gotta litter_box in this place. 
+We gotta cat (sleeping) in this place. 
+We gotta beanbag_chair in this place. 
+We gotta scratching_post in this place. 
+
+
+true.
+
+?- go(corridor_1_floor).
+Welcome to the corridor_1_floor
+
+Hmm, what a fancy wardrobe is right in my path
+
+From here you can go to:
+         - hallway_ground_floor
+         - room3
+         - room4
+         - room5
+
+We gotta wardrobe (moved) in this place. 
+
+
+true.
+
+?- go(room4).
+Welcome to the room4
+
+Small room.
+There was a work table and an armchair in the room, and a picture hung on the wall.
+
+From here you can go to:
+         - corridor_1_floor
+
+We gotta picture in this place. 
+We gotta work_table in this place. 
+We gotta armchair in this place. 
+
+
+true.
+
+?- inspect(work_table).
+It's clear, mkay..
+true.
+
+?- inspect(armchair).
+A chair is like a chair. lol what else to say
+true.
+
+?- inspect(picture).
+The picture was kind of weird. This was a screenshot of the top 13 in PUBG solo
+true.
+
+?- move(picture).
+I removed this shame from the wall! Hey, what's this in the small gap in the wall
+true.
+
+?- l.
+Small room.
+There was a work table and an armchair in the room, and a picture hung on the wall.
+
+From here you can go to:
+         - corridor_1_floor
+
+We gotta picture in this place. 
+We gotta work_table in this place. 
+We gotta armchair in this place. 
+We gotta case in this place. 
+
+
+true.
+
+?- inspect(case).
+You found a case! You need to enter a four-digit number. To open this case.
+true.
+
+?- open(case).
+Enter PIN please - open(case, PIN).
+true.
+
+?- open(case, 2131).
+Beep-beep-beep
+true.
+
+?- open(case, 1337).
+*click*. There's a laptop here!!! There's my mission's target!!!
+*** ACHTUNG ACHTUNG *** Alarm has turned on. Dr. Zero will arrive in a minute! RUN AGENT, RUN!!!
+Eeeee, I found! - take(laptop)
+true.
+
+?- take(laptop).
+You have picked the laptop
+true.
+
+?- l.
+Small room.
+There was a work table and an armchair in the room, and a picture hung on the wall.
+
+From here you can go to:
+         - corridor_1_floor
+
+We gotta picture in this place. 
+We gotta work_table in this place. 
+We gotta armchair in this place. 
+We gotta case in this place. 
+
+
+true.
+
+?- tl.
+You can see 00:50 on timer dispay.
+true.
+
+?- go(corridor_1_floor).
+Welcome to the corridor_1_floor
+
+Hmm, what a fancy wardrobe is right in my path
+
+From here you can go to:
+         - hallway_ground_floor
+         - room3
+         - room4
+         - room5
+
+We gotta wardrobe (moved) in this place. 
+
+
+true.
+
+?- go(hallway_ground_floor).
+Welcome to the hallway_ground_floor
+
+I'm in hallway_ground_floor
+What a long corridor. For a long time Mister Zero hasn't done cleaning here.
+What huge spiders are sitting on the ceiling
+
+From here you can go to:
+         - outside
+         - room1
+         - room2
+         - corridor_1_floor
+
+We gotta old_chair in this place. 
+We gotta car_keys in this place. 
+We gotta doormat in this place. 
+We gotta fiberboard_door in this place. 
+Should I take a look at items here?
+
+true.
+
+?- go(outside).
+Congratulation, Mission completed.
+You can see 00:27 on timer dispay.Enter "halt" to exit.
+true.

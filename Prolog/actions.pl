@@ -1,26 +1,26 @@
 /* These rules describe how to pick up an object. */
 
-/* This rule write out content of invertory */
+/* This rule write out content of inventory */
 
-invertory :-
+inventory :-
         check_alive,
         holding(_),
-        invertory_r, !.
+        inventory_r, !.
 
-invertory :-
+inventory :-
         write('You inventory in empty').
 
-invertory_r :-
+inventory_r :-
         holding(X),
         writeln(X),
         fail.
-invertory_r.
+inventory_r.
 
 
 /* This rule defines short cut to call invertory  */
 
 i :-
-        invertory.
+        inventory.
 
 
 /* These rules describe how to take objects */
@@ -36,6 +36,7 @@ take(X) :-
         at(X, Place),
         format('I cant take a ~s\n', [X]),
         writeln('It''s too heavy'), !.
+		
 
 take(X) :-
         current_room(Place, _),
@@ -141,7 +142,7 @@ d(X) :-
 
 look :-
         check_alive,
-	current_room(Place, _),
+		current_room(Place, _),
         describe(Place),nl,
         find_passages, nl,
         tell_objects_at(Place),
@@ -161,13 +162,18 @@ inspect(_) :-
 
 inspect(doormat) :-
         describe(doormat),
-        writeln('Here is a key. Shall i pick it up?'),
+        writeln('Here is a zinc_key. Shall i pick it up?'),
         assert(in(zinc_key, doormat)), !.
 
 inspect(hole) :-
         describe(hole),
         retract(behind(hole, carpet)),
         assert(passage(room3, hole)), !.
+		
+inspect(fridge) :-
+		describe(fridge),
+		writeln('Here is a key. Shall i pick it up?'),
+        assert(in(key, fridge)), !.
 
 inspect(X) :-
 	describe(X), !.
@@ -188,14 +194,11 @@ move(wardrobe) :-
         assert(passage(corridor_1_floor, room5)),
         change_title(wardrobe, 'wardrobe (moved)'), !.
 
-move(picture) :-
-        picture(onwall),
-        writeln('It is already moved.'), !.
 
 move(picture) :-
         retract(picture(onwall)),
-        writeln('I removed this shame from the wall!'),
-	assert(at(case, room4)), !.
+        writeln('I removed this shame from the wall! Hey, what''s this in the small gap in the wall'),
+		assert(at(case, room4)), !.
 
 move(carpet) :-
         writeln('Never thought it is so heavy.'),
@@ -223,22 +226,22 @@ open(oak_door) :-
         retract(at(oak_door, hallway_ground_floor)), !.
 
 open(oak_door) :-
-        writeln('Seems like it is locked. I need a key.'),
-        change_title(oak_door, 'oak_door (locked)').
+        writeln('Seems like it is locked. I need a key.').
+		/*change_title(oak_door, 'oak_door (locked)').*/
 
 open(fiberboard_door) :-
-        writeln('Locked.'),
+        writeln('Locked. Maybe the lead to nowhere...'),
         change_title(oak_door, 'fiberboard_door (locked)').
 
 open(fridge) :-
         locked(fridge),
         writeln('Frigde doors are locked, but there is no keyhole.\nIt is supposed to be using electromagnetic lock.'),
-        change_title(fridge, 'fridge (locked)'), !.
+        change_title(fridge, 'fridge (locked)').
 
 open(fridge) :-
-        change_title(fridge, 'fridge (opened)'),
         writeln('Here is a key. Never thought key should be stored at specific temperature.'),
-        in(key, fridge), !.
+        change_title(fridge, 'fridge (opened)'), !.
+		
 
 open(case) :-
         writeln('Enter PIN please - open(case, PIN).'), !.
@@ -252,7 +255,11 @@ open(_, _) :-
 open(case, 1337) :-
         retract(locked(case)),
         assert(in(laptop, case)),
-        writeln('*click*'), !.
+        writeln('*click*. There''s a laptop here!!! There''s my mission''s target!!!'),
+		writeln('*** ACHTUNG ACHTUNG *** Alarm has turned on. Dr. Zero will arrive in a minute! RUN AGENT, RUN!!!'),
+        reduce_timer_to(60000),
+		
+		describe(laptop), !.
 
 open(case, 1337) :-
         assert(case_status(closed)),

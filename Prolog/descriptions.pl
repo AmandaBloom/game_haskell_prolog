@@ -10,9 +10,9 @@ describe(old_chair) :-
 
 describe(car_keys) :-
 		writeln('Nice ... Besides being a villain, he also has a taste for cars. It''s like'),
-		writeln('a code written at the belt - 1337. It may help me sometime. Car alarm system '),
-                writeln('system pilot has 2 unlabeled buttons.'),
-                writeln('I definitely shouldn''t use it. (press(left_button|/right_button)'), !.
+		writeln('a code written at the belt - 1337. It may help me sometime. '),
+		writeln('Car Alarm System pilot has 2 unlabeled buttons.'),
+		writeln('I definitely shouldn''t use it. (press(left_button|/right_button)'), !.
 
 describe(room1) :-
         write('You are in the first room. Damn, the door to the next room is closed'), nl,
@@ -34,9 +34,11 @@ describe(room4) :-
         write('There was a work table and an armchair in the room, and a picture hung on the wall.'), nl, !.
 
 describe(room5) :-
-        writeln('room5 ¯\\_(ツ)_/¯').
+        writeln('room5, it seems like it''s his office'), !.
 
 describe(fridge) :- writeln('Oooh, it''s time to update this old refrigerator. Buzzing like a plane on the runway'), !.
+
+describe(wall_clock) :- writeln('It ain''t working from 1:37. Maybe its a sign???'), !.
 
 describe(sofa) :- writeln('What an old shabby sofa. How can you sit on it?'), !.
 
@@ -47,6 +49,8 @@ describe(wardrobe) :- writeln('A large oak wardrobe closes the passage to the ro
 describe(carpet) :- writeln('Great modern carpet. The truth does not fit into the interior of the house a little, looks suspicious.'), !.
 
 describe(armchair) :- writeln('A chair is like a chair. lol what else to say'), !.
+
+describe(work_table) :- writeln('It''s clear, mkay..'), !.
 
 describe(picture) :- writeln('The picture was kind of weird. This was a screenshot of the top 13 in PUBG solo'), !.
 
@@ -73,7 +77,7 @@ describe(music_stand) :- writeln('Music stand with some sheets.'), !.
 
 describe(litter_box) :- writeln('Blue litter box with sand. Fortunately with no wastes.'), !.
 
-describe(cat) :- writeln('Black cat with white paws and belly.'), !.
+describe(cat) :- writeln('Black cat with white paws and belly. It still sleep even when I opened door.'), !.
 
 describe(beanbag_chair) :- writeln('Big beanbag chair full covered in cat hair.'), !.
 

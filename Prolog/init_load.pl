@@ -23,7 +23,6 @@ init_load :-
         assert(at(sofa, room1)),
         assert(at(fridge, room1)),
         assert(at(stove, room1)),
-        assert(at(chair, room1)),
 
 
         /* corridor_1_floor */
@@ -40,7 +39,7 @@ init_load :-
         /* room4 */
 
         assert(at(picture, room4)),
-        assert(at(table, room4)),
+        assert(at(work_table, room4)),
         assert(at(armchair, room4)),
 
         /* room5 */

@@ -57,7 +57,7 @@ go(X) :-
         assert(passage_stack(Y)), !.
 
 go(_) :-
-        writeln('I you cannot go there').
+        writeln('Um... I cannot go there').
 
 go_(X) :-
         retractall(current_room(_, _)),
