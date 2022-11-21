@@ -19,22 +19,27 @@ at(car_keys, hallway_ground_floor).
 at(doormat, hallway_ground_floor).
 at(pine_door, hallway_ground_floor).
 at(oak_door, hallway_ground_floor).
+at(fiberboard_door, hallway_ground_floor).
 
 /* room1 */
 
 at(wall_clock, room1).
 at(sofa, room1).
 at(fridge, room1).
+at(stove, room1).
+at(chair, room1).
 
-/* room2 */
 
 /* corridor_1_floor */
 
 at(wardrobe, corridor_1_floor).
 
-/* room2 */
+/* room3 */
 
 at(carpet, room3).
+at(music_stand, room3).
+at(acoustic_guitar, room3).
+at(poster, room3).
 
 /* room4 */
 
@@ -42,9 +47,14 @@ at(picture, room4).
 at(table, room4).
 at(armchair, room4).
 
+/* room5 */
 
-in(laptop, case).
+at(litter_box, room5).
+at(cat, room5).
+at(beanbag_chair, room5).
+at(scratching_post, room5).
 
+title(cat, 'cat (sleeping)').
 
 
 /* Describe floor where room is located */
@@ -221,7 +231,7 @@ introduction :-
         write('.....'), nl,
         write('Finally... You entered Mister Zero''s crib. Front door appears to be intact.'), nl,
         write('You''re into the hallway_ground_floor. On the small table there''s note - it says'),
-        write('he will be back in 10 minutes, hurry up '), nl.
+        write('he will be back soon, so you have 10 minutes to leave the house, hurry up '), nl.
 
 /* This rule defines short cut to call invertory  */
 
@@ -370,7 +380,7 @@ describe(corridor_1_floor) :-
 describe(corridor_1_floor) :-
         write('Oooh, now I can move on'), nl, !.
 
-describe(room3) :- writeln(''), !.
+describe(room3) :- writeln('All the wall a covered with acoustic boards in this room.'), !.
 
 describe(room4) :-
         write('Small room.'), nl,
@@ -406,6 +416,22 @@ describe(doormat) :- writeln('Good old welcome doormat.'), !.
 
 describe(hole) :- writeln('This hole is as dark as a black hole'), !.
 
+describe(stove) :- writeln('White stove, surprisingly clean. Is rarely used.'), !.
+
+describe(acoustic_guitar) :- writeln('Some strings are missings.'), !.
+
+describe(poster) :- writeln('Metallica poster with a dark falcon on it.'), !.
+
+describe(music_stand) :- writeln('Music stand with some sheets.'), !.
+
+describe(litter_box) :- writeln('Blue litter box with sand. Fortunately with no wastes.'), !.
+
+describe(cat) :- writeln('Black cat with white paws and belly.'), !.
+
+describe(beanbag_chair) :- writeln('Big beanbag chair full covered in cat hair.'), !.
+
+describe(scratching_post) :- writeln('Cat claw scratcher with hanging ball.'), !.
+
 describe(_) :- writeln('It smells like 404 to me. Something went wrong.'), !.
 
 /* This rule describe how to move objects */
@@ -427,7 +453,7 @@ move(picture) :-
         retract(picture(onwall)),
         assert(picture(onfloor)),
         writeln('I removed this shame from the wall!'),
-	assert(behind(case, picture)), !.
+	assert(at(case, room4)), !.
 
 move(carpet) :-
         writeln('Never thought it is so heavy.'),
@@ -456,6 +482,11 @@ open(oak_door) :-
         writeln('Seems like it is locked. I need a key.'),
         change_title(oak_door, 'oak_door (locked)').
 
+open(fiberboard_door) :-
+        timer_check,
+        writeln('Locked.'),
+        change_title(oak_door, 'fiberboard_door (locked)').
+
 open(fridge) :-
         timer_check,
         locked(fridge),
@@ -471,8 +502,6 @@ open(case) :-
         writeln('Enter PIN please - open(case, PIN).'), !.
 
 open(_) :- writeln('Not sure if it is possible to open it.'), !.
-
-
 
 open(case, 1337) :-
         retract(locked(case)),
