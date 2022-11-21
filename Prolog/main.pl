@@ -45,7 +45,6 @@ at(armchair, room4).
 
 in(laptop, case).
 
-hidden(hole, carpet).
 
 
 /* Describe floor where room is located */
@@ -58,6 +57,7 @@ floor(corridor_1_floor, first_floor).
 floor(room3, first_floor).
 floor(room4, first_floor).
 floor(room5, first_floor).
+floor(hole, first_floor).
 
 /* Describe paths to rooms */
 
@@ -70,9 +70,11 @@ current_room(hallway_ground_floor, ground_floor).
 
 /* Tells the story connected with rooms*/
 
-story_tell(hallway_ground_floor) :- writeln('Should I take a look at items here? - inspect(X)').
+story_tell(hallway_ground_floor) :- writeln('Should I take a look at items here?').
 
-story_tell(room1) :- writeln('Should I take a look at items here? - inspect(X)').
+story_tell(room1) :- writeln('Should I take a look at items here?').
+
+story_tell(hole) :- die.
 
 story_tell(_) :- nl, !.
 
@@ -237,6 +239,11 @@ look :-
 		story_tell(Place),
 		nl, !.
 
+/* This rule defines short cut to call look  */
+
+l :-
+        look, !.
+
 % look_around :-
 %         timer_check,
 %         current_room(X, _),
@@ -266,14 +273,21 @@ la :-
 
 /* Take a look at object */
 
-inspect(doormat) :-
+inspect(_) :-
         timer_check,
+        fail.
+
+inspect(doormat) :-
         describe(doormat),
-        writeln('Here is a key. Shall i pick i up? - take(X)'),
+        writeln('Here is a key. Shall i pick it up?'),
         assert(in(zinc_key, doormat)), !.
 
+inspect(hole) :-
+        describe(hole),
+        retract(behind(hole, carpet)),
+        assert(passage(room3, hole)), !.
+
 inspect(X) :-
-        timer_check,
 	describe(X), !.
 
 
@@ -304,8 +318,9 @@ help :-
         writeln('take(Object). / t(O).      -- Pick up an object.'),
         writeln('drop(Object). / d(O).      -- Put down an object.'),
         writeln('inventory. / i.            -- Check invertory.'),
-        writeln('look_around. / la.         -- Look around you again.'),
+        writeln('look. / l.                 -- Look around you again.'),
         writeln('inspect(Object)            -- Look at smth in room'),
+        writeln('move(Object)               -- Move at smth in room'),
         writeln('time_left / tl.            -- Сheck how much time is left'),
         writeln('help.                      -- See this message again.'),
         writeln('halt.                      -- End the game and quit.'),
@@ -372,11 +387,11 @@ describe(key) :- writeln('Yes, it''s a key.'), !.
 
 describe(wardrobe) :- writeln('A large oak wardrobe closes the passage to the rooms on the 2nd floor'), !.
 
-describe(carpet) :- writeln('Great modern carpet. The truth does not fit into the interior of the house a little'), !.
+describe(carpet) :- writeln('Great modern carpet. The truth does not fit into the interior of the house a little, looks suspicious.'), !.
 
 describe(armchair) :- writeln('A chair is like a chair. lol what else to say'), !.
 
-describe(picture) :- writeln('The picture was kind of weird. This was a screenshot of the top 13 in PUBG solo' - move(picture)), !.
+describe(picture) :- writeln('The picture was kind of weird. This was a screenshot of the top 13 in PUBG solo'), !.
 
 describe(case) :-
         writeln('You found a case! You need to enter a four-digit number. To open this case.'), !.
@@ -388,6 +403,8 @@ describe(pine_door) :- writeln('A pine door with a big glass panel. Shall i try 
 describe(oak_door) :- writeln('A Massive internal oak door. Shall i try opening it? - open(X)'), !.
 
 describe(doormat) :- writeln('Good old welcome doormat.'), !.
+
+describe(hole) :- writeln('This hole is as dark as a black hole'), !.
 
 describe(_) :- writeln('It smells like 404 to me. Something went wrong.'), !.
 
@@ -402,7 +419,7 @@ move(X) :-
 
 move(wardrobe) :-
         writeln('Oh, it is moving.'),
-        writeln('Here are doors!'),
+        writeln('Here is passage to another room, but no doors.!'),
         assert(passage(corridor_1_floor, room5)),
         change_title(wardrobe, 'wardrobe (moved)'), !.
 
@@ -412,21 +429,14 @@ move(picture) :-
         writeln('I removed this shame from the wall!'),
 	assert(behind(case, picture)), !.
 
+move(carpet) :-
+        writeln('Never thought it is so heavy.'),
+        assert(behind(hole, carpet)), !.
+
 move(_) :-
-        writeln('I cant move it').
+        writeln('I cant move it'), !.
 
 /* These rules describe how to open smth  */
-
-open_obj(X):-
-	current_room(Place, _),
-	at(X, Place),
-	in(Object, X),
-	write('There is '),
-	write(Object),
-	write(' in '),
-	write(X), nl,
-	inspect(Object),
-	nl.
 
 open(pine_door) :-
         timer_check,
@@ -457,7 +467,12 @@ open(fridge) :-
         writeln('Here is a key. Never thought key should be stored at specific temperature.'),
         in(key, fridge), !.
 
+open(case) :-
+        writeln('Enter PIN please - open(case, PIN).'), !.
+
 open(_) :- writeln('Not sure if it is possible to open it.'), !.
+
+
 
 open(case, 1337) :-
         retract(locked(case)),
