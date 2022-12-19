@@ -1,5 +1,6 @@
 -- <Agent Of Fortune Game> by Roman Ishchuk, Denys Savytskyi, Tomasz Pawlak
 
+import System.IO
 
 introductionText = [
     "Welcome Agent!. The world is a dangerous place. Mister Zero wants to make it",
@@ -8,7 +9,7 @@ introductionText = [
     "for the Laptop with codes and protect our future...",
     "Be quick, he is gonna come back in any time... ",
     "",
-        
+
     "...............Agent Of Fortune Game...............",
     "",
     "Finally... You entered Mister Zero''s crib. Front door appears to be intact.",
@@ -47,9 +48,10 @@ printInstructions = printLines instructionsText
 readCommand :: IO String
 readCommand = do
     putStr "> "
+    hFlush stdout
     xs <- getLine
     return xs
-    
+
 -- note that the game loop may take the game state as
 -- an argument, eg. gameLoop :: State -> IO ()
 gameLoop :: IO ()
@@ -57,9 +59,10 @@ gameLoop = do
     cmd <- readCommand
     case cmd of
         "instructions" -> do printInstructions
-                             gameLoop
+        _ -> do putStr "Unknown command. Try again \n"
+    gameLoop
 
-        
+
 main = do
     printIntroduction
     printInstructions
