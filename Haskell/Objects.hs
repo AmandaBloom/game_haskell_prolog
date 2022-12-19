@@ -31,7 +31,7 @@ module Objects where
         "A Massive internal oak door.\n"
         "Shall i try opening it? - open\n"
         "hallway_ground_floor" [] False True False nothing
-   
+
     doormat :: Object
     doormat = Object "doormat"
         "Good old welcome doormat.\n"
@@ -122,14 +122,14 @@ module Objects where
         ""
         "room4" [] True False True nothing
 
-    case :: Object
-    case = Object "case"
-        "You found a case! You need to enter a four-digit number. To open this case.\n"
+    safe :: Object
+    safe = Object "safe"
+        "You found a safe ! You need to enter a four-digit number. To open this safe .\n"
         ""
         "room4" [laptop] False True False code
 
     code :: Object
-    code = Object "code" "1337" "" "" "" [] True False False nothing
+    code = Object "code" "1337" "" "" [] True False False nothing
 
     laptop :: Object
     laptop = Object "laptop"
