@@ -1,6 +1,10 @@
 -- <Agent Of Fortune Game> by Roman Ishchuk, Denys Savytskyi, Tomasz Pawlak
 
 import System.IO
+import Objects
+import Rooms
+import State
+import Data.List (isPrefixOf)
 
 introductionText = [
     "Welcome Agent!. The world is a dangerous place. Mister Zero wants to make it",
