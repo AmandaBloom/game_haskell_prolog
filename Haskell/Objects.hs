@@ -15,19 +15,19 @@ module Objects where
     nothing = Object "nothing" "" "" "" [] False False False nothing
 
     car_keys :: Object
-    car_keys = Object "car keys"
+    car_keys = Object "car_keys"
         "Nice ... Besides being a villain, he also has a taste for cars. It''s like a code written at the belt - 1337. It may help me sometime. Car Alarm System pilot has 2 unlabeled buttons.\n"
         "I definitely shouldn''t use it. press left_button or press right_button\n"
         "hallway_ground_floor" [] True False True nothing
 
     old_chair :: Object
-    old_chair = Object "old chair"
+    old_chair = Object "old_chair"
         "Looks like he likes old things, but he doesn''t take care of them. Very well...\n"
         ""
         "hallway_ground_floor" [] True False True nothing
 
     oak_door :: Object
-    oak_door = Object "oak door"
+    oak_door = Object "oak_door"
         "A Massive internal oak door.\n"
         "Shall i try opening it? - open\n"
         "hallway_ground_floor" [] False True False nothing
@@ -39,7 +39,7 @@ module Objects where
         "hallway_ground_floor" [] False False False nothing
 
     pine_door :: Object
-    pine_door = Object "pine door"
+    pine_door = Object "pine_door"
         "A pine door with a big glass panel.\n"
         "Shall i try opening it? - open"
         "hallway_ground_floor" [] False True False nothing
@@ -63,7 +63,7 @@ module Objects where
         "room1" [] False False False nothing
 
     wall_clock :: Object
-    wall_clock = Object "wall clock"
+    wall_clock = Object "wall_clock"
         "It ain''t working from 1:37. Maybe its a sign???\n"
         ""
         "room1" [] True False False nothing
@@ -87,7 +87,7 @@ module Objects where
         "room3" [] False False False nothing
 
     acoustic_guitar :: Object
-    acoustic_guitar = Object "acoustic guitar"
+    acoustic_guitar = Object "acoustic_guitar"
         "Some strings are missings.\n"
         ""
         "room3" [] True False True nothing
@@ -99,7 +99,7 @@ module Objects where
         "room3" [] True False True nothing
 
     music_stand :: Object
-    music_stand = Object "music stand"
+    music_stand = Object "music_stand"
         "Music stand with some sheets.\n"
         ""
         "room3" [] True False True nothing

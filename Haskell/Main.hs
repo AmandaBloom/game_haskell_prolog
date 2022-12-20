@@ -20,9 +20,10 @@ gameLoop state = do
             "i" -> showInventory state
             "inventory" -> showInventory state
             "back" -> goBack state
-            -- "drop" -> dropObj state
             "inspect" -> inspect arg state
             "go" -> go arg state
+            "take" -> takeObj arg state
+            "drop" -> dropObj arg state
             _ -> showInvalid state
         )
     else return state

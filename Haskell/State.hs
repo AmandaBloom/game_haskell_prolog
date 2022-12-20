@@ -49,7 +49,11 @@ module State where
         let room = getRoomByName room_name
         let passages = Rooms.passage (currentRoom state)
         if elem (Rooms.name room) (map Rooms.name passages) then
-            state {show = (getRoomDescription room), currentRoom = room, pathStack = (pathStack state ++ [currentRoom state])}
+            state {show = (getRoomDescription room),
+                    currentRoom = room,
+                    pathStack = (pathStack state ++ [currentRoom state]),
+                    definedObjects = (Rooms.has room)
+                }
         else
             state {show = [("Cant go there")]}
 
@@ -57,38 +61,50 @@ module State where
     goBack state = do
         let room = last (pathStack state)
         if length (pathStack state) > 0 then
-            state {show = (getRoomDescription room), currentRoom = room, pathStack = (init (pathStack state))}
+            state {show = (getRoomDescription room),
+                    currentRoom = room,
+                    pathStack = (init (pathStack state)),
+                    definedObjects = (Rooms.has room)
+                }
         else
             state {show = ["something went wrong"]}
 
-    -- goTo :: String -> State -> State
-    -- goTo object state =
-    --     let it = getObject object state in
-    --     if Objects.isAt it == (currentRoom state) then
-    --         state {show = ["You got to " ++ object], currentRoom = object}
-    --     else state {show = ["You can't go there."]}
+    takeObj :: String -> State -> State
+    takeObj object state = do
+        let obj = getObjByName object
+        let room = currentRoom state
+        if elem object (map Objects.name (has room)) then
+            if isTakeable obj then
+                state {
+                    show = [("You have picked the ") ++ (object)],
+                    definedObjects = filter (\x -> x /= obj) (has room),
+                    inventory = (inventory state) ++ [obj]
+                }
+            else
+                state {show = [("It's too heavy")]}
+        else
+            state {show = [("I don't see it here")]}
 
-    -- goBack :: State -> State
-    -- goBack state = state {show = ["You're back at " ++ currentRoom state], currentRoom = (currentRoom state)}
 
-    -- getObject :: String -> State -> Object
-    -- getObject object state =
-    --     let matched = (filter (\x -> lowercase(Objects.name x) == object) (definedObjects state)) in
-    --         if matched /= [] then head (matched)
-    --         else Objects.nothing
-
-    -- takeObj :: String -> State -> State
-    -- takeObj object state =
-    --     if lowercase(currentRoom state) == lowercase(object) then
-    --         let it = getObject object state in
-    --         if it /= Objects.nothing then do
-    --             (if isTakeable it then state {show=["You're holding " ++ object], holding = [it]}
-    --              else state {show = ["You can't take that. It's too heavy."]})
-    --         else state {show = ["You can't take that. Get closer."]}
-    --     else state {show = ["You can't take that. Get closer."]}
-
-    -- dropObj :: State -> State
-    -- dropObj state = state {show=["You dropped " ++ Objects.name (head(holding state))], holding= []}
+    dropObj :: String -> State -> State
+    dropObj object state = do
+        let obj = getObjByName object
+        let room = currentRoom state
+        if elem object (map Objects.name (inventory state)) then
+            if length (inventory state) == 1 then
+                state {
+                    show = [("You have dropped the ") ++ (object)],
+                    definedObjects = (definedObjects state) ++ [obj],
+                    inventory = []
+                }
+            else
+                state {
+                    show = [("You have dropped the ") ++ (object)],
+                    definedObjects = (definedObjects state) ++ [obj],
+                    inventory = filter (\x -> x /= obj) (inventory state)
+                }
+        else
+            state {show = [("You aren't holding it!")]}
 
     introductionText :: [String]
     introductionText = [
