@@ -28,10 +28,21 @@ module State where
     showInvalid state = state {show = invalidCommandText}
 
     showInventory :: State -> State
-    showInventory state = state {show = "Your inventory:" : map Objects.name (inventory state)}
+    showInventory state = do
+        if length (inventory state) > 0 then
+            state {show = "Your inventory:" : map Objects.name (inventory state)}
+        else state {show = ["Your inventory is empty"]}
 
     lookAround :: State -> State
     lookAround state = state {show = (getRoomDescription (imAt state)) }
+
+    inspect :: String -> State -> State
+    inspect name state = do
+        let obj = getObjByName name
+        if (imAt state) == (isAt obj) then
+            state {show = [(Objects.description obj) ++ (Objects.actions obj)]}
+        else
+            state {show = ["It smells like 404 to me. Something went wrong"]}
 
     goTo :: String -> State -> State
     goTo object state =
@@ -61,16 +72,6 @@ module State where
 
     dropObj :: State -> State
     dropObj state = state {show=["You dropped " ++ Objects.name (head(holding state))], holding= []}
-
-    unlock :: String -> State -> State
-    unlock object state =
-        if lowercase(imAt state) == lowercase(object) then
-            let it = getObject object state in
-            if it /= nothing then do
-                (if isTakeable it then state {show=["You're holding " ++ object], holding = [it]}
-                 else state {show = ["You can't take that. It's too heavy."]})
-            else state {show = ["You can't take that. Get closer."]}
-        else state {show = ["You can't take that. Get closer."]}
 
     introductionText :: [String]
     introductionText = [

@@ -161,3 +161,31 @@ module Objects where
         "Cat claw scratcher with hanging ball.\n"
         ""
         "room5" [] False False True nothing
+
+    getObjByName :: String -> Object
+    getObjByName name = do
+        case name of
+            "car_keys" -> car_keys
+            "old_chair" -> old_chair
+            "oak_door" -> oak_door
+            "doormat" -> doormat
+            "pine_door" -> pine_door
+            "fiberboard_door" -> fiberboard_door
+            "fridge" -> fridge
+            "sofa" -> sofa
+            "wall_clock" -> wall_clock
+            "stove" -> stove
+            "wardrobe" -> wardrobe
+            "carpet" -> carpet
+            "acoustic_guitar" -> acoustic_guitar
+            "poster" -> poster
+            "music_stand" -> music_stand
+            "armchair" -> armchair
+            "work_table" -> work_table
+            "picture" -> picture
+            "safe" -> safe
+            "laptop" -> laptop
+            "litter_box" -> litter_box
+            "cat" -> cat
+            "beanbag_chair" -> beanbag_chair
+            "scratching_post" -> scratching_post

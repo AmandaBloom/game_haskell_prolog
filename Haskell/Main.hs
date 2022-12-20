@@ -1,31 +1,28 @@
 import State
 import Utils
-import Data.List (isPrefixOf)
-
+import Data.List.Split
 
 printIntroduction = printLines introductionText
 printInstructions = printLines instructionsText
 
-parseCmd :: String -> State -> State
-parseCmd cmd state
-            --  | isPrefixOf "look at" cmd    = lookAt (drop 8 cmd)
-             | isPrefixOf "go"   cmd    = goTo (drop 3 cmd) state
-             | isPrefixOf "take"    cmd    = takeObj (drop 5 cmd) state
-             | otherwise                   = showInvalid state
 
 gameLoop :: State -> IO (State)
 gameLoop state = do
     printState state
     cmd <- readCommand
-    if cmd /= "quit" && not (dead state) then gameLoop (
-        case cmd of
+    let splited = splitOn " " cmd
+    let action = splited !! 0
+    let arg = splited !! 1
+    if action /= "quit" && not (dead state) then gameLoop (
+        case action of
             "instructions" -> showInstructions state
             "look" -> lookAround state
             "i" -> showInventory state
             "inventory" -> showInventory state
             "go back" -> goBack state
             "drop" -> dropObj state
-            _ -> do parseCmd cmd state
+            "inspect" -> inspect arg state
+            _ -> showInvalid state
         )
     else return state
 
