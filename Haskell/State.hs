@@ -6,10 +6,10 @@ module State where
 
     data State = State {
             show :: [String],
-            imAt :: String, -- przy obiekcie lub w pokoju
-            holding :: [Object], -- tylko 1
+            imAt :: String,
+            holding :: [Object],
             inventory :: [Object],
-            currentRoom :: String, -- w pokoju
+            currentRoom :: String,
             time :: Int,
             dead :: Bool,
             definedObjects :: [Object]
@@ -90,30 +90,39 @@ module State where
 
     introductionText :: [String]
     introductionText = [
-        "You're a spy who's been tasked with stealing Dr. D's research on a remarkable new fuel that will take space travel to a new, unprecedented level.",
-        "You must steal the research as quickly as possible before Dr. D. returns to his lab.",
+        "Welcome Agent!. The world is a dangerous place. Mister Zero wants to make it",
+        "even worse. Our intelligence has proven he has nuclear codes and he''s gonna",
+        "use them to destroy The World. That''s why you were sent to his house. Search",
+        "for the Laptop with codes and protect our future...",
+        "Be quick, he is gonna come back in any time... ",
         "",
-        "You have successfully entered the home of Dr. D. You are behind the front door.",
-        "From what you have been able to determine with your co-workers, Doctor D. should be back in half an hour (number of moves - X).",
-        "Be careful what you do, remember that every move counts!.",
+
+        "...............Agent Of Fortune Game...............",
+        "",
+        "Finally... You entered Mister Zero''s crib. Front door appears to be intact.",
+        "You''re into the hallway_ground_floor. On the small table there''s note - it says",
+        "he will be back soon, so you have 10 minutes to leave the house, hurry up",
         ""
         ]
 
     instructionsText :: [String]
     instructionsText = [
-        "Available commands are (params in UPPERCASE):",
+        "Available commands are:",
         "",
-        "look                  -- to look around you again.",
-        -- "look at OBJECT        -- to look at something in the room.",
-        "go to OBJECT          -- to get to a certain place.",
-        "go back               -- to get back in the room.",
-        "take OBJECT           -- to pick up an object.",
-        "drop                  -- to put down the object you're holding.",
-        "put in i              -- to put an object in inventory.",
-        "get from i OBJECT     -- to get an object from inventory.",
-        "inventory /i          -- to check inventory.",
-        "instructions          -- to see this message again.",
-        "quit                  -- to end the game and quit.",
+        "instructions  -- to see these instructions.",
+        "go            -- Enter the room.",
+        "back          -- Enter the previous room.",
+        "take          -- Pick up an object.",
+        "drop          -- Put down an object.",
+        "inventory     -- Check inventory.",
+        "look          -- Look around you again.",
+        "inspect       -- Look at smth in room.",
+        "open          -- Open at smth in room,",
+        "move          -- Move at smth in room.",
+        "turn_off      -- Turn smth off.",
+        "press         -- Press the button.",
+        "time_left     -- Check how much time is left",
+        "quit          -- to end the game and quit.",
         ""
         ]
 
