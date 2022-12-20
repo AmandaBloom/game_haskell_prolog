@@ -42,7 +42,7 @@ module State where
         if (Rooms.name (currentRoom state)) == (isAt obj) then
             case name of
                 "doormat" -> state {
-                    show = [(Objects.description obj) ++ (Objects.actions obj) ++ ("Here is a zinc_key. Shall i pick it up?")],
+                    show = [(Objects.description obj) ++ (Objects.actions obj) ++ ("Here is a zincKkey. Shall i pick it up?")],
                     definedObjects = (definedObjects state) ++ [zincKey]}
                 _ -> state {show = [(Objects.description obj) ++ (Objects.actions obj)]}
         else
@@ -78,10 +78,15 @@ module State where
         let obj = getObjByName object
         let room = currentRoom state
         if elem object (map Objects.name (has room)) then
-            if isLocked obj then
-                state {
-                    show = [("You have open the ") ++ (object)]
-                }
+            if not (isLocked obj) then
+                case object of
+                    "oakDoor" -> do
+                        -- can be openned if zinkKey is in invertory
+                        if elem "zinkKey" (map Objects.name (inventory state)) then
+                            state {show = [("You have open the ") ++ (object)]}
+                        else
+                            state {show = [("I can't open ins")]}
+                    _ -> state {show = [("You have open the ") ++ (object)]}
             else
                 state {show = [("I can't open it")]}
         else
