@@ -5,9 +5,8 @@ name:                adventure
 version:             0.1.0.0
 -- synopsis:
 -- description:
-license:             None
-license-file:        LICENSE
-author:              Denys Savytskyi
+license:             OtherLicense
+author:              Roman Ishchuk, Denys Savytskyi, Tomasz Pawlak
 maintainer:          deonissavytsk@gmail.com
 -- copyright:
 -- category:
@@ -17,7 +16,7 @@ cabal-version:       >=1.10
 
 executable adventure
   main-is:             Main.hs
-  other-modules:       Objects Rooms
+  other-modules:       Objects Rooms State Utils
   -- other-extensions:
   build-depends:       base >=4.12 && <4.13
   -- hs-source-dirs:
