@@ -22,6 +22,7 @@ gameLoop state = do
             "back" -> goBack state
             "inspect" -> inspect arg state
             "go" -> go arg state
+            "open" -> openObj arg state
             "move" -> moveObj arg state
             "take" -> takeObj arg state
             "drop" -> dropObj arg state

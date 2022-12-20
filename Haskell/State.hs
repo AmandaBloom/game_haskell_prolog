@@ -69,6 +69,20 @@ module State where
         else
             state {show = ["something went wrong"]}
 
+    openObj :: String -> State -> State
+    openObj object state = do
+        let obj = getObjByName object
+        let room = currentRoom state
+        if elem object (map Objects.name (has room)) then
+            if isLocked obj then
+                state {
+                    show = [("You have open the ") ++ (object)]
+                }
+            else
+                state {show = [("I can't open it")]}
+        else
+            state {show = [("I don't see it here")]}
+
     moveObj :: String -> State -> State
     moveObj object state = do
         let obj = getObjByName object
@@ -76,9 +90,7 @@ module State where
         if elem object (map Objects.name (has room)) then
             if isMoved obj then
                 state {
-                    show = [("You have moved the ") ++ (object)],
-                    definedObjects = filter (\x -> x /= obj) (has room),
-                    inventory = (inventory state) ++ [obj]
+                    show = [("You have moved the ") ++ (object)]
                 }
             else
                 state {show = [("It's too heavy")]}
