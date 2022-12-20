@@ -6,17 +6,17 @@ module State where
 
     data State = State {
             show :: [String],
-            imAt :: String,
+            currentRoom :: Room,
             holding :: [Object],
             inventory :: [Object],
-            currentRoom :: String,
             time :: Int,
             dead :: Bool,
-            definedObjects :: [Object]
+            definedObjects :: [Object],
+            pathStack :: [Room]
         } deriving (Show)
 
     initState :: State
-    initState = State [] "hallway_ground_floor" [] [] "hallway_ground_floor" 60 False  [old_chair,car_keys,doormat,pine_door,oak_door,fiberboard_door]
+    initState = State [] hallway_ground_floor [] [] 60 False [old_chair,car_keys,doormat,pine_door,oak_door,fiberboard_door] []
 
     printState :: State -> IO ()
     printState state = printLines(show state)
@@ -34,44 +34,61 @@ module State where
         else state {show = ["Your inventory is empty"]}
 
     lookAround :: State -> State
-    lookAround state = state {show = (getRoomDescription (imAt state)) }
+    lookAround state = state {show = (getRoomDescription (currentRoom state)) }
 
     inspect :: String -> State -> State
     inspect name state = do
         let obj = getObjByName name
-        if (imAt state) == (isAt obj) then
+        if (Rooms.name (currentRoom state)) == (isAt obj) then
             state {show = [(Objects.description obj) ++ (Objects.actions obj)]}
         else
             state {show = ["It smells like 404 to me. Something went wrong"]}
 
-    goTo :: String -> State -> State
-    goTo object state =
-        let it = getObject object state in
-        if Objects.isAt it == (currentRoom state) then
-            state {show = ["You got to " ++ object], imAt = object}
-        else state {show = ["You can't go there."]}
+    go :: String -> State -> State
+    go room_name state = do
+        let room = getRoomByName room_name
+        let passages = Rooms.passage (currentRoom state)
+        if elem (Rooms.name room) (map Rooms.name passages) then
+            state {show = (getRoomDescription room), currentRoom = room, pathStack = (pathStack state ++ [currentRoom state])}
+        else
+            state {show = [("Cant go there")]}
 
     goBack :: State -> State
-    goBack state = state {show = ["You're back at " ++ currentRoom state], imAt = (currentRoom state)}
+    goBack state = do
+        let room = last (pathStack state)
+        if length (pathStack state) > 0 then
+            state {show = (getRoomDescription room), currentRoom = room, pathStack = (init (pathStack state))}
+        else
+            state {show = ["something went wrong"]}
 
-    getObject :: String -> State -> Object
-    getObject object state =
-        let matched = (filter (\x -> lowercase(Objects.name x) == object) (definedObjects state)) in
-            if matched /= [] then head (matched)
-            else nothing
+    -- goTo :: String -> State -> State
+    -- goTo object state =
+    --     let it = getObject object state in
+    --     if Objects.isAt it == (currentRoom state) then
+    --         state {show = ["You got to " ++ object], currentRoom = object}
+    --     else state {show = ["You can't go there."]}
 
-    takeObj :: String -> State -> State
-    takeObj object state =
-        if lowercase(imAt state) == lowercase(object) then
-            let it = getObject object state in
-            if it /= nothing then do
-                (if isTakeable it then state {show=["You're holding " ++ object], holding = [it]}
-                 else state {show = ["You can't take that. It's too heavy."]})
-            else state {show = ["You can't take that. Get closer."]}
-        else state {show = ["You can't take that. Get closer."]}
+    -- goBack :: State -> State
+    -- goBack state = state {show = ["You're back at " ++ currentRoom state], currentRoom = (currentRoom state)}
 
-    dropObj :: State -> State
-    dropObj state = state {show=["You dropped " ++ Objects.name (head(holding state))], holding= []}
+    -- getObject :: String -> State -> Object
+    -- getObject object state =
+    --     let matched = (filter (\x -> lowercase(Objects.name x) == object) (definedObjects state)) in
+    --         if matched /= [] then head (matched)
+    --         else Objects.nothing
+
+    -- takeObj :: String -> State -> State
+    -- takeObj object state =
+    --     if lowercase(currentRoom state) == lowercase(object) then
+    --         let it = getObject object state in
+    --         if it /= Objects.nothing then do
+    --             (if isTakeable it then state {show=["You're holding " ++ object], holding = [it]}
+    --              else state {show = ["You can't take that. It's too heavy."]})
+    --         else state {show = ["You can't take that. Get closer."]}
+    --     else state {show = ["You can't take that. Get closer."]}
+
+    -- dropObj :: State -> State
+    -- dropObj state = state {show=["You dropped " ++ Objects.name (head(holding state))], holding= []}
 
     introductionText :: [String]
     introductionText = [

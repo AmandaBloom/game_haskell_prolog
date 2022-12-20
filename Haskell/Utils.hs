@@ -16,13 +16,16 @@ module Utils where
 
     lowercase = map toLower
 
-    getRoomDescription :: String -> [String]
-    getRoomDescription roomName =
-        case roomName of
-            "hallway_ground_floor" -> Rooms.description hallway_ground_floor : "We gotta: " :map Objects.name (Rooms.has hallway_ground_floor)
-            "corridor_1_floor" -> Rooms.description corridor_1_floor : "We gotta: " :map Objects.name (Rooms.has corridor_1_floor)
-            "room1" -> Rooms.description room1 : "We gotta: " :map Objects.name (Rooms.has room1)
-            "room2" -> Rooms.description room2 : "We gotta: " :map Objects.name (Rooms.has room2)
-            "room3" -> Rooms.description room3 : "We gotta: " :map Objects.name (Rooms.has room3)
-            "room4" -> Rooms.description room4 : "We gotta: " :map Objects.name (Rooms.has room4)
-            "room5" -> Rooms.description room5 : "We gotta: " :map Objects.name (Rooms.has room5)
+    getRoomDescription :: Room -> [String]
+    getRoomDescription room =
+        getRoomInterior room ++ getRoomPassages room
+
+    getRoomInterior :: Room -> [String]
+    getRoomInterior room =
+        Rooms.description room : "We gotta: " :map Objects.name (Rooms.has room)
+
+    getRoomPassages :: Room -> [String]
+    getRoomPassages room =
+        "\nFrom here you can go to" : map Rooms.name (Rooms.passage room)
+
+

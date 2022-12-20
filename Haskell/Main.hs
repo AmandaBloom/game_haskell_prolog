@@ -19,9 +19,10 @@ gameLoop state = do
             "look" -> lookAround state
             "i" -> showInventory state
             "inventory" -> showInventory state
-            "go back" -> goBack state
-            "drop" -> dropObj state
+            "back" -> goBack state
+            -- "drop" -> dropObj state
             "inspect" -> inspect arg state
+            "go" -> go arg state
             _ -> showInvalid state
         )
     else return state
