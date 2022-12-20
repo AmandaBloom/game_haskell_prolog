@@ -16,7 +16,7 @@ module State where
         } deriving (Show)
 
     initState :: State
-    initState = State [] hallway_ground_floor [] [] 60 False [old_chair,car_keys,doormat,pine_door,oak_door,fiberboard_door] []
+    initState = State [] hallwayGroundFloor [] [] 60 False [oldChair,carKeys,doormat,pineDoor,oakDoor,fiberboardDoor] []
 
     printState :: State -> IO ()
     printState state = printLines(show state)
@@ -45,8 +45,8 @@ module State where
             state {show = ["It smells like 404 to me. Something went wrong"]}
 
     go :: String -> State -> State
-    go room_name state = do
-        let room = getRoomByName room_name
+    go roomName state = do
+        let room = getRoomByName roomName
         let passages = Rooms.passage (currentRoom state)
         if elem (Rooms.name room) (map Rooms.name passages) then
             state {show = (getRoomDescription room),
@@ -118,7 +118,7 @@ module State where
         "...............Agent Of Fortune Game...............",
         "",
         "Finally... You entered Mister Zero''s crib. Front door appears to be intact.",
-        "You''re into the hallway_ground_floor. On the small table there''s note - it says",
+        "You''re into the hallwayGroundFloor. On the small table there''s note - it says",
         "he will be back soon, so you have 10 minutes to leave the house, hurry up",
         ""
         ]
