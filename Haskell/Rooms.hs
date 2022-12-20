@@ -15,7 +15,7 @@ module Rooms where
     room1 = Room "room1"
         "You are in the first room. Damn, the door to the next room is closed. I have to find the key to the door to open the door to the second room."
         [wall_clock,sofa,fridge,stove]
-    
+
     room2 :: Room
     room2 = Room "room2"
         "It''s so empty here, like after a robbery"

@@ -62,22 +62,6 @@ module State where
     dropObj :: State -> State
     dropObj state = state {show=["You dropped " ++ Objects.name (head(holding state))], holding= []}
 
-    putInInventory :: State -> State
-    putInInventory state = state {show=[Objects.name (head(holding state)) ++ " added to inventory"],
-                                  inventory = (inventory state)++(holding state),
-                                  holding= []}
-
-    getFromInventory :: String -> State -> State
-    getFromInventory object state =
-        if holding state == [] then
-            let it = (filter (\x -> lowercase(Objects.name x) == object) (inventory state)) in
-                if it /= [] then
-                    state {show=["You're holding "++(Objects.name (head(it)))],
-                           holding=it,
-                           inventory=(filter (\x -> lowercase(Objects.name x) /= object) (inventory state))}
-                else state {show = ["You don't have it in your inventory."]}
-        else state {show=["You're holding something. Drop or put it in inventory."]}
-
     unlock :: String -> State -> State
     unlock object state =
         if lowercase(imAt state) == lowercase(object) then
