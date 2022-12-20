@@ -101,18 +101,20 @@ module State where
     takeObj object state = do
         let obj = getObjByName object
         let room = currentRoom state
-        if elem object (map Objects.name (has room)) then
-            if isTakeable obj then
-                state {
-                    show = [("You have picked the ") ++ (object)],
-                    definedObjects = filter (\x -> x /= obj) (has room),
-                    inventory = (inventory state) ++ [obj]
-                }
+        if elem object (map Objects.name (inventory state)) then
+            state {show = [("It's already exist in inventory")]}
+        else     
+            if elem object (map Objects.name (has room)) then
+                if isTakeable obj then
+                    state {
+                        show = [("You have picked the ") ++ (object)],
+                        definedObjects = filter (\x -> x /= obj) (has room),
+                        inventory = (inventory state) ++ [obj]
+                    }
+                else
+                    state {show = [("It's too heavy")]}
             else
-                state {show = [("It's too heavy")]}
-        else
-            state {show = [("I don't see it here")]}
-
+                state {show = [("I don't see it here")]}
 
     dropObj :: String -> State -> State
     dropObj object state = do
