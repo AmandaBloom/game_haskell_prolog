@@ -162,6 +162,12 @@ module Objects where
         ""
         "room5" [] False False True nothing
 
+    zincKey :: Object
+    zincKey = Object "zincKey"
+        "Zinc key.\n"
+        ""
+        "hallwayGroundFloor" [] False False True nothing
+
     getObjByName :: String -> Object
     getObjByName name = do
         case name of

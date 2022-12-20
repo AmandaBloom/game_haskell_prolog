@@ -40,7 +40,11 @@ module State where
     inspect name state = do
         let obj = getObjByName name
         if (Rooms.name (currentRoom state)) == (isAt obj) then
-            state {show = [(Objects.description obj) ++ (Objects.actions obj)]}
+            case name of
+                "doormat" -> state {
+                    show = [(Objects.description obj) ++ (Objects.actions obj) ++ ("Here is a zinc_key. Shall i pick it up?")],
+                    definedObjects = (definedObjects state) ++ [zincKey]}
+                _ -> state {show = [(Objects.description obj) ++ (Objects.actions obj)]}
         else
             state {show = ["It smells like 404 to me. Something went wrong"]}
 
@@ -103,7 +107,7 @@ module State where
         let room = currentRoom state
         if elem object (map Objects.name (inventory state)) then
             state {show = [("It's already exist in inventory")]}
-        else     
+        else
             if elem object (map Objects.name (has room)) then
                 if isTakeable obj then
                     state {
