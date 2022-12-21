@@ -19,6 +19,7 @@ executable adventure
   other-modules:       Objects Rooms State Utils
   -- other-extensions:
   build-depends:       base >=4.12 && <4.13,
-                       split > 0.2
+                       split > 0.2,
+                       unordered-containers > 0.2
   -- hs-source-dirs:
   default-language:    Haskell2010

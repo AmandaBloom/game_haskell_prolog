@@ -13,19 +13,3 @@ module Utils where
         hFlush stdout
         xs <- getLine
         return xs
-
-    lowercase = map toLower
-
-    getRoomDescription :: Room -> [String]
-    getRoomDescription room =
-        getRoomInterior room ++ getRoomPassages room
-
-    getRoomInterior :: Room -> [String]
-    getRoomInterior room =
-        Rooms.description room : "We gotta: " :map Objects.name (Rooms.has room)
-
-    getRoomPassages :: Room -> [String]
-    getRoomPassages room =
-        "\nFrom here you can go to" : map Rooms.name (Rooms.passage room)
-
-

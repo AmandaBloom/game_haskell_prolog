@@ -12,9 +12,9 @@ module Rooms where
 
     hallwayGroundFloor :: Room
     hallwayGroundFloor = Room "hallwayGroundFloor"
-        "I''m in hallwayGroundFloor What a long corridor. For a long time Mister Zero hasn''t done cleaning here. What huge spiders are sitting on the ceiling"
+        "I''m in hallwayGroundFloor. What a long corridor. For a long time Mister Zero hasn''t done cleaning here. What huge spiders are sitting on the ceiling"
         [oldChair,carKeys,doormat,pineDoor,oakDoor,fiberboardDoor]
-        [room1,room2,corridor1Floor]
+        [room1]
 
     room1 :: Room
     room1 = Room "room1"
@@ -52,13 +52,3 @@ module Rooms where
         [litterBox,cat,beanbagChair,scratchingPost]
         [corridor1Floor]
 
-    getRoomByName :: String -> Room
-    getRoomByName name = case name of
-        "hallwayGroundFloor" -> hallwayGroundFloor
-        "corridor1Floor" -> corridor1Floor
-        "room1" -> room1
-        "room2" -> room2
-        "room3" -> room3
-        "room4" -> room4
-        "room5" -> room5
-        _ -> Rooms.nothing

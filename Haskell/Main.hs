@@ -19,13 +19,13 @@ gameLoop state = do
             "look" -> lookAround state
             "i" -> showInventory state
             "inventory" -> showInventory state
-            "back" -> goBack state
             "inspect" -> inspect arg state
             "go" -> go arg state
-            "open" -> openObj arg state
-            "move" -> moveObj arg state
+            "back" -> goBack state
             "take" -> takeObj arg state
             "drop" -> dropObj arg state
+            "open" -> openObj arg state
+            -- "move" -> moveObj arg state
             _ -> showInvalid state
         )
     else return state
