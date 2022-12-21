@@ -110,6 +110,17 @@ module State where
         else
             state {show = ["something went wrong"]}
 
+    turnOff :: String -> State -> State
+    turnOff object state = do
+        let obj = getObjByName object
+        let roomName = currentRoom state
+        if isInRoom object roomName state then
+            case object of
+                "fridge"-> state {show=["Booooom!!!\nYou're dead\nPress Enter to exit."], dead = True}
+                _-> state {show = [("I can't turn off it ")]}
+        else
+            state {show = [("I don't see it here")]}
+
     takeObj :: String -> State -> State
     takeObj object state = do
         let obj = getObjByName object
@@ -221,6 +232,7 @@ module State where
         "Available commands are:",
         "",
         "instructions      -- to see these instructions.",
+        "turnOff           -- To turn of smth in room.",
         "go                -- Enter the room.",
         "back / b          -- Enter the previous room.",
         "take / t          -- Pick up an object.",

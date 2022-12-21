@@ -29,9 +29,11 @@ gameLoop state = do
             "drop" -> dropObj arg state
             "d" -> dropObj arg state
             "open" -> openObj arg state
+            "open safe with" -> openObj arg state
             "o" -> openObj arg state
             "move" -> moveObj arg state
             "m" -> moveObj arg state
+            "turnOff" -> turnOff arg state
             _ -> showInvalid state
         )
     else return state
