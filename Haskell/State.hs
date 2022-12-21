@@ -180,9 +180,12 @@ module State where
         let room = currentRoom state
         if isInRoom object room state then
             if isMoved obj then
-                state {
-                    show = [("You have moved the ") ++ (object)]
-                }
+                case object of 
+                    "wardrobe" -> state {
+                        show = [("You have moved the ") ++ (object)],
+                        roomPassage = addPassage room3 room state
+                    }
+                    _ -> state {show = [("You have moved the ") ++ (object)]}
             else
                 state {show = [("It's too heavy")]}
         else
