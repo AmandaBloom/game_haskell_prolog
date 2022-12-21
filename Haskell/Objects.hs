@@ -17,7 +17,7 @@ module Objects where
     carKeys :: Object
     carKeys = Object "carKeys"
         "Nice ... Besides being a villain, he also has a taste for cars. It''s like a code written at the belt - 1337. It may help me sometime. Car Alarm System pilot has 2 unlabeled buttons.\n"
-        "I definitely shouldn''t use it. press left_button or press right_button\n"
+        "I will remember this code - take code\nI will take carKeys"
         "hallwayGroundFloor" [] True False True []
 
     oldChair :: Object
@@ -196,4 +196,5 @@ module Objects where
             "beanbagChair" -> beanbagChair
             "scratchingPost" -> scratchingPost
             "zincKey" -> zincKey
+            "code" -> code
             _ -> nothing

@@ -74,9 +74,13 @@ module State where
         if (Rooms.name (getCurrentRoom state)) == (isAt obj) then
             case name of
                 "doormat" -> state {
-                    show = [(Objects.description obj) ++ (Objects.actions obj) ++ ("Here is a zincKkey. Shall i pick it up?")],
+                    show = [(Objects.description obj) ++ (Objects.actions obj) ++ ("Here is a zincKey. Shall i pick it up?")],
                     roomHas = addObj zincKey (currentRoom state) state
                 }
+                "carKeys" -> state {
+                    show = [(Objects.description obj) ++ (Objects.actions obj)],
+                    roomHas = addObj code (currentRoom state) state
+                    }
                 _ -> state {show = [(Objects.description obj) ++ (Objects.actions obj)]}
         else
             state {show = ["It smells like 404 to me. Something went wrong"]}
@@ -184,6 +188,10 @@ module State where
                     "wardrobe" -> state {
                         show = [("You have moved the ") ++ (object)],
                         roomPassage = addPassage room3 room state
+                    }
+                    "picture" -> state {
+                        show = [("You have moved the ") ++ (object)],
+                        roomHas = addObj safe room state
                     }
                     _ -> state {show = [("You have moved the ") ++ (object)]}
             else
