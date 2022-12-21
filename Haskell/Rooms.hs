@@ -10,11 +10,14 @@ module Rooms where
     nothing :: Room
     nothing = Room "" "" [] []
 
+    outside :: Room
+    outside = Room "outside" "" [] []
+
     hallwayGroundFloor :: Room
     hallwayGroundFloor = Room "hallwayGroundFloor"
         "I''m in hallwayGroundFloor. What a long corridor. For a long time Mister Zero hasn''t done cleaning here. What huge spiders are sitting on the ceiling"
         [oldChair,carKeys,doormat,pineDoor,oakDoor,fiberboardDoor]
-        [room1]
+        [outside,room1]
 
     room1 :: Room
     room1 = Room "room1"

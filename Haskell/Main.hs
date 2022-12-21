@@ -13,19 +13,25 @@ gameLoop state = do
     let splited = splitOn " " cmd
     let action = splited !! 0
     let arg = splited !! 1
-    if action /= "quit" && not (dead state) then gameLoop (
+    if action /= "quit" && action /= "q" && not (dead state) then gameLoop (
         case action of
             "instructions" -> showInstructions state
             "look" -> lookAround state
-            "i" -> showInventory state
+            "l" -> lookAround state
             "inventory" -> showInventory state
+            "i" -> showInventory state
             "inspect" -> inspect arg state
             "go" -> go arg state
             "back" -> goBack state
+            "b" -> goBack state
             "take" -> takeObj arg state
+            "t" -> takeObj arg state
             "drop" -> dropObj arg state
+            "d" -> dropObj arg state
             "open" -> openObj arg state
-            -- "move" -> moveObj arg state
+            "o" -> openObj arg state
+            "move" -> moveObj arg state
+            "m" -> moveObj arg state
             _ -> showInvalid state
         )
     else return state

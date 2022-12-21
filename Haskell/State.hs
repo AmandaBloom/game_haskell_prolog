@@ -84,14 +84,16 @@ module State where
     go :: String -> State -> State
     go roomName state = do
         let passages = fromMaybe [Rooms.nothing] (HM.lookup (currentRoom state) (roomPassage state))
-        -- let passages = (roomPassage state) ! roomName
-        if elem roomName (Prelude.map Rooms.name passages) then
-            state {show = (getRoomDescription roomName state),
-                    currentRoom = roomName,
-                    pathStack = (pathStack state ++ [currentRoom state])
-                }
+        if roomName == "outside" then
+            checkWin state
         else
-            state {show = [("Cant go there")]}
+            if elem roomName (Prelude.map Rooms.name passages) then
+                state {show = (getRoomDescription roomName state),
+                        currentRoom = roomName,
+                        pathStack = (pathStack state ++ [currentRoom state])
+                    }
+            else
+                state {show = [("Cant go there")]}
 
     goBack :: State -> State
     goBack state = do
@@ -153,6 +155,10 @@ module State where
                                 show = [("You have openned the ") ++ (object)],
                                 roomPassage = addPassage corridor1Floor roomName state
                             }
+                            "safe" -> state {
+                                show = [("You have openned the ") ++ (object)],
+                                roomHas = addObj laptop roomName state
+                            }
                             _ -> state {show = [("Not Implemented \nerror in openObj case 1")]}
                     else
                         state {show = [("I can't open it")]}
@@ -203,18 +209,18 @@ module State where
     instructionsText = [
         "Available commands are:",
         "",
-        "instructions  -- to see these instructions.",
-        "go            -- Enter the room.",
-        "back          -- Enter the previous room.",
-        "take          -- Pick up an object.",
-        "drop          -- Put down an object.",
-        "inventory     -- Check inventory.",
-        "look          -- Look around you again.",
-        "inspect       -- Look at smth in room.",
-        "open          -- Open at smth in room,",
-        "move          -- Move at smth in room.",
-        "press         -- Press the button.",
-        "quit          -- to end the game and quit.",
+        "instructions      -- to see these instructions.",
+        "go                -- Enter the room.",
+        "back / b          -- Enter the previous room.",
+        "take / t          -- Pick up an object.",
+        "drop / d          -- Put down an object.",
+        "inventory / i     -- Check inventory.",
+        "look / l          -- Look around you again.",
+        "inspect           -- Look at smth in room.",
+        "open / o          -- Open at smth in room,",
+        "move / m          -- Move at smth in room.",
+        "press / p         -- Press the button.",
+        "quit / q          -- to end the game and quit.",
         ""
         ]
 
@@ -269,3 +275,16 @@ module State where
     rmPassage passage roomName state =
         insertWith f roomName [passage] (roomPassage state)
             where f new old = Prelude.filter (\x -> x /= (new !! 0 )) old
+
+    checkWin :: State -> State
+    checkWin state = do
+        if isInInvertory "laptop" state then
+            state {
+                show = [("Congratulation, Mission completed.") ++ (" Press Enter to exit.")],
+                dead = True
+            }
+        else
+            state {
+                show = [("No laptop found. Mission failed.") ++ (" Press Enter to exit.")],
+                dead = True
+            }
