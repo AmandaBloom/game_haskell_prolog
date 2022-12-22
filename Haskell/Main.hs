@@ -52,7 +52,7 @@ main :: IO State
 main = do
 
     startTime <- getUnixTime
-    let endTime = toEpochTime startTime + 0
+    let endTime = toEpochTime startTime + 600
     let endTime_int = read (Prelude.show endTime) :: Int
 
     let initState = State [] "hallwayGroundFloor" [] 60 False [oldChair,carKeys,doormat,pineDoor,oakDoor,fiberboardDoor] [] (HM.fromList [
