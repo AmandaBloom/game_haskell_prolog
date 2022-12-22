@@ -1,10 +1,11 @@
 module State where
     import Objects
     import Rooms
-    import Prelude hiding (show)
     import Utils
     import Data.Maybe
     import Data.HashMap.Strict as HM
+    import Data.UnixTime
+    import System.Posix.Types
 
     data State = State {
             show :: [String],
@@ -16,57 +17,30 @@ module State where
             pathStack :: [String],
             rooms :: HashMap String Room,
             roomHas :: HashMap String [Object],
-            roomPassage :: HashMap String [Room]
+            roomPassage :: HashMap String [Room],
+            endTime :: Int
         } deriving (Show)
 
-    initState :: State
-    initState = State [] "hallwayGroundFloor" [] 60 False
-        [oldChair,carKeys,doormat,pineDoor,oakDoor,fiberboardDoor] []
-        (HM.fromList [
-            ("hallwayGroundFloor", hallwayGroundFloor),
-            ("corridor1Floor", corridor1Floor),
-            ("room1", room1),
-            ("room2", room2),
-            ("room3", room3),
-            ("room4", room4),
-            ("room5", room5)
-        ])
-        (HM.fromList [
-            ("hallwayGroundFloor", Rooms.has hallwayGroundFloor),
-            ("corridor1Floor", Rooms.has corridor1Floor),
-            ("room1", Rooms.has room1),
-            ("room2", Rooms.has room2),
-            ("room3", Rooms.has room3),
-            ("room4", Rooms.has room4),
-            ("room5", Rooms.has room5)
-        ])
-        (HM.fromList [
-            ("hallwayGroundFloor", Rooms.passage hallwayGroundFloor),
-            ("corridor1Floor", Rooms.passage corridor1Floor),
-            ("room1", Rooms.passage room1),
-            ("room2", Rooms.passage room2),
-            ("room3", Rooms.passage room3),
-            ("room4", Rooms.passage room4),
-            ("room5", Rooms.passage room5)
-        ])
-
     printState :: State -> IO ()
-    printState state = printLines(show state)
+    printState state = printLines(State.show state)
 
     showInstructions :: State -> State
-    showInstructions state = state {show = instructionsText}
+    showInstructions state = state {State.show = instructionsText}
 
     showInvalid :: State -> State
-    showInvalid state = state {show = invalidCommandText}
+    showInvalid state = state {State.show = invalidCommandText}
+
+    showTimeOut :: State -> State
+    showTimeOut state = state {State.show = ["*** Time is out ***\nMission failed." ++ ("\n  ¯\\_(ツ)_/¯\n") ++ ("Press Enter to exit.")], dead=True}
 
     showInventory :: State -> State
     showInventory state = do
         if length (inventory state) > 0 then
-            state {show = "Your inventory:" : Prelude.map Objects.name (inventory state)}
-        else state {show = ["Your inventory is empty"]}
+            state {State.show = "Your inventory:" : Prelude.map Objects.name (inventory state)}
+        else state {State.show = ["Your inventory is empty"]}
 
     lookAround :: State -> State
-    lookAround state = state {show = (getRoomDescription (currentRoom state) state) }
+    lookAround state = state {State.show = (getRoomDescription (currentRoom state) state) }
 
     inspect :: String -> State -> State
     inspect name state = do
@@ -74,16 +48,16 @@ module State where
         if (Rooms.name (getCurrentRoom state)) == (isAt obj) then
             case name of
                 "doormat" -> state {
-                    show = [(Objects.description obj) ++ (Objects.actions obj) ++ ("Here is a zincKey. Shall i pick it up?")],
-                    roomHas = addObj zincKey (currentRoom state) state
+                    State.show = [(Objects.description obj) ++ (Objects.actions obj) ++ ("Here is a zincKey. Shall i pick it up?")],
+                    State.roomHas = addObj zincKey (currentRoom state) state
                 }
                 "carKeys" -> state {
-                    show = [(Objects.description obj) ++ (Objects.actions obj)],
-                    roomHas = addObj code (currentRoom state) state
+                    State.show = [(Objects.description obj) ++ (Objects.actions obj)],
+                    State.roomHas = addObj code (currentRoom state) state
                     }
-                _ -> state {show = [(Objects.description obj) ++ (Objects.actions obj)]}
+                _ -> state {State.show = [(Objects.description obj) ++ (Objects.actions obj)]}
         else
-            state {show = ["It smells like 404 to me. Something went wrong"]}
+            state {State.show = ["It smells like 404 to me. Something went wrong"]}
 
     go :: String -> State -> State
     go roomName state = do
@@ -92,23 +66,23 @@ module State where
             checkWin state
         else
             if elem roomName (Prelude.map Rooms.name passages) then
-                state {show = (getRoomDescription roomName state),
+                state {State.show = (getRoomDescription roomName state),
                         currentRoom = roomName,
                         pathStack = (pathStack state ++ [currentRoom state])
                     }
             else
-                state {show = [("Cant go there")]}
+                state {State.show = [("Cant go there")]}
 
     goBack :: State -> State
     goBack state = do
         let roomName = last (pathStack state)
         if length (pathStack state) > 0 then
-            state {show = (getRoomDescription roomName state),
+            state {State.show = (getRoomDescription roomName state),
                     currentRoom = roomName,
                     pathStack = (init (pathStack state))
                 }
         else
-            state {show = ["something went wrong"]}
+            state {State.show = ["something went wrong"]}
 
     turnOff :: String -> State -> State
     turnOff object state = do
@@ -116,10 +90,10 @@ module State where
         let roomName = currentRoom state
         if isInRoom object roomName state then
             case object of
-                "fridge"-> state {show=["Booooom!!!\nYou're dead\nPress Enter to exit."], dead = True}
-                _-> state {show = [("I can't turn off it ")]}
+                "fridge"-> state {State.show=["Booooom!!!\nYou're dead\nPress Enter to exit."], dead = True}
+                _-> state {State.show = [("I can't turn off it ")]}
         else
-            state {show = [("I don't see it here")]}
+            state {State.show = [("I don't see it here")]}
 
     takeObj :: String -> State -> State
     takeObj object state = do
@@ -128,14 +102,14 @@ module State where
         if isInRoom object roomName state then
             if isTakeable obj then
                 state {
-                    show = [("You have picked the ") ++ (object)],
+                    State.show = [("You have picked the ") ++ (object)],
                     roomHas = rmObj obj roomName state,
                     inventory = (inventory state) ++ [obj]
                 }
             else
-                state {show = [("It's too heavy")]}
+                state {State.show = [("It's too heavy")]}
         else
-            state {show = [("I don't see it here")]}
+            state {State.show = [("I don't see it here")]}
 
     dropObj :: String -> State -> State
     dropObj object state = do
@@ -144,18 +118,18 @@ module State where
         if isInInvertory object state then
             if length (inventory state) == 1 then
                 state {
-                    show = [("You have dropped the ") ++ (object)],
+                    State.show = [("You have dropped the ") ++ (object)],
                     roomHas = addObj obj (currentRoom state) state,
                     inventory = []
                 }
             else
                 state {
-                    show = [("You have dropped the ") ++ (object)],
+                    State.show = [("You have dropped the ") ++ (object)],
                     roomHas = addObj obj (currentRoom state) state,
                     inventory = Prelude.filter (\x -> x /= obj) (inventory state)
                 }
         else
-            state {show = [("You aren't holding it!")]}
+            state {State.show = [("You aren't holding it!")]}
 
     openObj :: String -> State -> State
     openObj object state = do
@@ -167,27 +141,27 @@ module State where
                     if isInInvertory (Objects.name ((openWith obj) !! 0)) state then
                         case object of
                             "oakDoor" -> state {
-                                show = [("You have openned the ") ++ (object)],
+                                State.show = [("You have openned the ") ++ (object)],
                                 roomPassage = addPassage corridor1Floor roomName state
                             }
                             "safe" -> state {
-                                show = [("You have openned the ") ++ (object)],
+                                State.show = [("You have openned the ") ++ (object)],
                                 roomHas = addObj laptop roomName state
                             }
-                            _ -> state {show = [("Not Implemented \nerror in openObj case 1")]}
+                            _ -> state {State.show = [("Not Implemented \nerror in openObj case 1")]}
                     else
-                        state {show = [("I can't open it")]}
+                        state {State.show = [("I can't open it")]}
                 else
                     case object of
                         "pineDoor" -> state {
-                            show = [("You have openned the ") ++ (object)],
+                            State.show = [("You have openned the ") ++ (object)],
                             roomPassage = addPassage room2 roomName state
                         }
-                        _ -> state {show = [("Not Implemented \nerror in openObj case 2")]}
+                        _ -> state {State.show = [("Not Implemented \nerror in openObj case 2")]}
             else
-                state {show = [("I can't open it")]}
+                state {State.show = [("I can't open it")]}
         else
-            state {show = [("I don't see it here")]}
+            state {State.show = [("I don't see it here")]}
 
     moveObj :: String -> State -> State
     moveObj object state = do
@@ -195,20 +169,27 @@ module State where
         let room = currentRoom state
         if isInRoom object room state then
             if isMoved obj then
-                case object of 
+                case object of
                     "wardrobe" -> state {
-                        show = [("You have moved the ") ++ (object)],
+                        State.show = [("You have moved the ") ++ (object)],
                         roomPassage = addPassage room3 room state
                     }
                     "picture" -> state {
-                        show = [("You have moved the ") ++ (object)],
+                        State.show = [("You have moved the ") ++ (object)],
                         roomHas = addObj safe room state
                     }
-                    _ -> state {show = [("You have moved the ") ++ (object)]}
+                    _ -> state {State.show = [("You have moved the ") ++ (object)]}
             else
-                state {show = [("It's too heavy")]}
+                state {State.show = [("It's too heavy")]}
         else
-            state {show = [("I don't see it here")]}
+            state {State.show = [("I don't see it here")]}
+
+    timeLeft :: Int -> State -> State
+    timeLeft now state = do
+        let left = (endTime state) - now
+        let min = (div left 60)
+        let sec = (rem left 60)
+        state { State.show = [("You can see ") ++ (Prelude.show min) ++ (":") ++ (Prelude.show sec) ++ (" on screen")] }
 
     introductionText :: [String]
     introductionText = [
@@ -303,11 +284,11 @@ module State where
     checkWin state = do
         if isInInvertory "laptop" state then
             state {
-                show = [("Congratulation, Mission completed.") ++ (" Press Enter to exit.")],
+                State.show = [("Congratulation, Mission completed.") ++ (" Press Enter to exit.")],
                 dead = True
             }
         else
             state {
-                show = [("No laptop found. Mission failed.") ++ (" Press Enter to exit.")],
+                State.show = [("No laptop found. Mission failed.") ++ (" Press Enter to exit.")],
                 dead = True
             }
