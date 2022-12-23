@@ -1,3 +1,4 @@
+-- Time utilities definition
 module Utils where
     import Objects
     import Rooms

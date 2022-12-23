@@ -1,3 +1,4 @@
+-- Definition of standard outputs, commands usage and error msg-s
 module State where
     import Objects
     import Rooms
@@ -266,11 +267,6 @@ module State where
         insertWith f roomName [obj] (roomHas state)
             where f new old = Prelude.filter (\x -> x /= (new !! 0 )) old
 
-    -- rmObj :: Object -> String -> State -> HashMap String [Object]
-    -- rmObj obj roomName state =
-    --     alter f roomName (roomHas state)
-    --         where f (Just old) = Just (Prelude.filter (\x -> x /= obj) old)
-
     addPassage :: Room -> String -> State -> HashMap String [Room]
     addPassage passage roomName state =
         insertWith f roomName [passage] (roomPassage state)
@@ -280,7 +276,7 @@ module State where
     rmPassage passage roomName state =
         insertWith f roomName [passage] (roomPassage state)
             where f new old = Prelude.filter (\x -> x /= (new !! 0 )) old
-
+    -- You win if you got a laptop in inventory and exit house
     checkWin :: State -> State
     checkWin state = do
         if isInInvertory "laptop" state then

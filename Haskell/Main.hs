@@ -9,7 +9,7 @@ import Data.UnixTime
 printIntroduction = printLines introductionText
 printInstructions = printLines instructionsText
 
-
+-- Definition of every cycle in game that begins with read command from console
 gameLoop :: State -> IO (State)
 gameLoop state = do
     printState state
@@ -50,7 +50,7 @@ gameLoop state = do
 
 main :: IO State
 main = do
-
+    -- timer for game is set to 10 mins
     startTime <- getUnixTime
     let endTime = toEpochTime startTime + 600
     let endTime_int = read (Prelude.show endTime) :: Int

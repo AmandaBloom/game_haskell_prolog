@@ -1,3 +1,4 @@
+-- Objects definitions
 module Objects where
     data Object = Object {
         name :: String,

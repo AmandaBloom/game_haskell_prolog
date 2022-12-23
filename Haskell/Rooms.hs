@@ -1,3 +1,4 @@
+-- Rooms definition 
 module Rooms where
     import Objects
     data Room = Room {
