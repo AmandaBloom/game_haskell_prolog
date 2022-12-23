@@ -1,0 +1,403 @@
+ubuntu@primary:~/parp/parp-22z/Haskell$ cabal run :all
+Up to date
+Welcome Agent!. The world is a dangerous place. Mister Zero wants to make it
+even worse. Our intelligence has proven he has nuclear codes and he's gonna
+use them to destroy The World. That's why you were sent to his house. Search
+for the Laptop with codes and protect our future...
+Be quick, he is gonna come back in any time...
+
+...............Agent Of Fortune Game...............
+
+Finally... You entered Mister Zero's crib. Front door appears to be intact.
+You're into the hallwayGroundFloor. On the small table there's note - it says
+he will be back soon, so you have 10 minutes to leave the house, hurry up
+Start with looking around you:
+
+Available commands are:
+
+instructions      -- to see these instructions.
+turnOff           -- To turn of smth in room.
+go                -- Enter the room.
+back / b          -- Enter the previous room.
+take / t          -- Pick up an object.
+drop / d          -- Put down an object.
+inventory / i     -- Check inventory.
+look / l          -- Look around you again.
+inspect           -- Look at smth in room.
+open / o          -- Open at smth in room,
+move / m          -- Move at smth in room.
+press / p         -- Press the button.
+quit / q          -- to end the game and quit.
+
+> l
+I'm in hallwayGroundFloor. What a long corridor. For a long time
+Mister Zero hasn't done cleaning here. What huge spiders are
+sitting on the ceiling
+
+We gotta:
+oldChair
+carKeys
+doormat
+pineDoor
+oakDoor
+
+From here you can go to
+outside
+room1
+> inspect oldChair
+Looks like he likes old things, but he doesn't take care
+of them. Very well...
+
+> inspect carKeys
+Nice ... Besides being a villain, he also has a taste for cars.
+It's like a code written at the belt - 1337. It may help me
+sometime. Car Alarm System pilot has 2 unlabeled buttons.
+I will remember this code - take code
+I will take carKeys
+
+> take code
+You have picked the code
+> take carKeys
+You have picked the carKeys
+> inspect doormat
+Good old welcome doormat.
+Here is a zincKey. Shall i pick it up?
+> take zincKey
+You have picked the zincKey
+> inspect pineDoor
+A pineDoor with a big glass panel.
+Shall i try opening it? - open
+
+> open pineDoor
+You have openned the pineDoor
+> l
+I'm in hallwayGroundFloor. What a long corridor. For a long time
+Mister Zero hasn't done cleaning here. What huge spiders are
+sitting on the ceiling
+
+We gotta:
+oldChair
+doormat
+pineDoor
+oakDoor
+
+From here you can go to
+outside
+room1
+room2
+> go room2
+It's so empty here, like after a robbery...
+
+We gotta:
+
+From here you can go to
+hallwayGroundFloor
+> go hallwayGroundFloor
+I'm in hallwayGroundFloor. What a long corridor. For a long time
+Mister Zero hasn't done cleaning here. What huge spiders are
+sitting on the ceiling
+
+We gotta:
+oldChair
+doormat
+pineDoor
+oakDoor
+
+From here you can go to
+outside
+room1
+room2
+> go room1
+You are in the first room. Damn, the door to the next room is
+closed. I have to find the key to the door to open the door to
+the second room.
+
+We gotta:
+wallClock
+sofa
+fridge
+stove
+
+From here you can go to
+hallwayGroundFloor
+> inspect wallClock
+It ain't working from 1:37. Maybe its a sign???
+
+> inspect sofa
+What an old shabby sofa. How can you sit on it?
+
+> inspect fridge
+Oooh, it's time to update this old refrigerator.
+It's Buzzing like a plane on the runway.
+
+> inspect stove
+White stove, surprisingly clean. Is rarely used.
+
+> l
+You are in the first room. Damn, the door to the next room is
+closed. I have to find the key to the door to open the door to
+the second room.
+
+We gotta:
+wallClock
+sofa
+fridge
+stove
+
+From here you can go to
+hallwayGroundFloor
+> go hallwayGroundFloor
+I'm in hallwayGroundFloor. What a long corridor. For a long time
+Mister Zero hasn't done cleaning here. What huge spiders are
+sitting on the ceiling
+
+We gotta:
+oldChair
+doormat
+pineDoor
+oakDoor
+
+From here you can go to
+outside
+room1
+room2
+> open oakDoor
+You have openned the oakDoor
+> l
+I'm in hallwayGroundFloor. What a long corridor. For a long time
+Mister Zero hasn't done cleaning here. What huge spiders are
+sitting on the ceiling
+
+We gotta:
+oldChair
+doormat
+pineDoor
+oakDoor
+
+From here you can go to
+outside
+room1
+room2
+corridor1Floor
+> go corridor1Floor
+Hmm, what a fancy wardrobe is right in my path...
+
+We gotta:
+wardrobe
+
+From here you can go to
+hallwayGroundFloor
+> inspect wardrobe
+A large oak wardrobe closes the passage to the rooms on the 2nd floor.
+
+> move wardrobe
+You have moved the wardrobe
+> l
+Hmm, what a fancy wardrobe is right in my path...
+
+We gotta:
+wardrobe
+
+From here you can go to
+hallwayGroundFloor
+room3
+> go room3
+All the wall a covered with acoustic boards in this room.
+
+We gotta:
+carpet
+musicStand
+acousticGuitar
+poster
+
+From here you can go to
+corridor1Floor
+room4
+room5
+> inspect carpet
+Great modern carpet. The truth does not fit into the interior
+of the house a little
+
+> inspect musicStand
+Music stand with some sheets.
+
+> inspect acousticGuitar
+Some strings are missings.
+
+> inspect poster
+Metallica poster with a dark falcon on it.
+
+> l
+All the wall a covered with acoustic boards in this room.
+
+We gotta:
+carpet
+musicStand
+acousticGuitar
+poster
+
+From here you can go to
+corridor1Floor
+room4
+room5
+> go room4
+Small room. There was a work table and an armchair in the room,
+and a picture hung on the wall.
+
+We gotta:
+picture
+workTable
+armchair
+
+From here you can go to
+room3
+> inspect picture
+Is it a picture of a woman. I wonder who it is, on the back
+there's signed 'Jules 1978'.
+
+> move picture
+You have moved the picture
+> inspect workTable
+It's clear, mkay..
+
+> inspect armchair
+Standard armchair, nothing interesting here
+
+> l
+Small room. There was a work table and an armchair in the room,
+and a picture hung on the wall.
+
+We gotta:
+picture
+workTable
+armchair
+safe
+
+From here you can go to
+room3
+> inspect safe
+You found a safe ! You need to enter a four-digit number.
+To open this safe.
+
+> open safe 1337
+You have openned the safe
+> l
+Small room. There was a work table and an armchair in the room,
+and a picture hung on the wall.
+
+We gotta:
+picture
+workTable
+armchair
+safe
+laptop
+
+From here you can go to
+room3
+> inspect laptop
+Eeeee, I found! - take'
+
+> take laptop
+You have picked the laptop
+> l
+Small room. There was a work table and an armchair in the room,
+and a picture hung on the wall.
+
+We gotta:
+picture
+workTable
+armchair
+safe
+
+From here you can go to
+room3
+> go room3
+All the wall a covered with acoustic boards in this room.
+
+We gotta:
+carpet
+musicStand
+acousticGuitar
+poster
+
+From here you can go to
+corridor1Floor
+room4
+room5
+> go room5
+room5, it seems like it's his office!
+
+We gotta:
+litterBox
+cat
+beanbagChair
+scratchingPost
+
+From here you can go to
+room3
+> inspect cat
+Black cat with white paws and belly. It's still sleeping...
+even when I opened door.
+
+> inspect beanbagChair
+Big beanbag chair full covered in cat hair.
+
+> inspect scratchingPost
+Cat claw scratcher with hanging ball.
+
+> inspect litterBox
+Blue litter box with sand. Fortunately with no wastes.
+
+> l
+room5, it seems like it's his office!
+
+We gotta:
+litterBox
+cat
+beanbagChair
+scratchingPost
+
+From here you can go to
+room3
+> go room3
+All the wall a covered with acoustic boards in this room.
+
+We gotta:
+carpet
+musicStand
+acousticGuitar
+poster
+
+From here you can go to
+corridor1Floor
+room4
+room5
+> go corridor1Floor
+Hmm, what a fancy wardrobe is right in my path...
+
+We gotta:
+wardrobe
+
+From here you can go to
+hallwayGroundFloor
+room3
+> go hallwayGroundFloor
+I'm in hallwayGroundFloor. What a long corridor. For a long time
+Mister Zero hasn't done cleaning here. What huge spiders are
+sitting on the ceiling
+
+We gotta:
+oldChair
+doormat
+pineDoor
+oakDoor
+
+From here you can go to
+outside
+room1
+room2
+corridor1Floor
+> go outside
+Congratulation, Mission completed. Press Enter to exit.
+>
+ubuntu@primary:~/parp/parp-22z/Haskell$
