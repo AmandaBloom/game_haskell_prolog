@@ -1,10 +1,10 @@
 module Utils where
     import Objects
     import Rooms
-    import Data.Char
     import System.IO
     import Data.UnixTime
-
+    import Data.Char
+    
     -- print strings from list in separate lines
     printLines :: [String] -> IO ()
     printLines xs = putStr (unlines xs)

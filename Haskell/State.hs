@@ -194,17 +194,18 @@ module State where
     introductionText :: [String]
     introductionText = [
         "Welcome Agent!. The world is a dangerous place. Mister Zero wants to make it",
-        "even worse. Our intelligence has proven he has nuclear codes and he''s gonna",
-        "use them to destroy The World. That''s why you were sent to his house. Search",
+        "even worse. Our intelligence has proven he has nuclear codes and he's gonna",
+        "use them to destroy The World. That's why you were sent to his house. Search",
         "for the Laptop with codes and protect our future...",
         "Be quick, he is gonna come back in any time... ",
         "",
 
         "...............Agent Of Fortune Game...............",
         "",
-        "Finally... You entered Mister Zero''s crib. Front door appears to be intact.",
-        "You''re into the hallwayGroundFloor. On the small table there''s note - it says",
+        "Finally... You entered Mister Zero's crib. Front door appears to be intact.",
+        "You're into the hallwayGroundFloor. On the small table there's note - it says",
         "he will be back soon, so you have 10 minutes to leave the house, hurry up",
+        "Start with looking around you:",
         ""
         ]
 

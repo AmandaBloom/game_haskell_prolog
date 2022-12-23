@@ -55,7 +55,7 @@ main = do
     let endTime = toEpochTime startTime + 600
     let endTime_int = read (Prelude.show endTime) :: Int
 
-    let initState = State [] "hallwayGroundFloor" [] 60 False [oldChair,carKeys,doormat,pineDoor,oakDoor,fiberboardDoor] [] (HM.fromList [
+    let initState = State [] "hallwayGroundFloor" [] 60 False [oldChair,carKeys,doormat,pineDoor,oakDoor] [] (HM.fromList [
             ("hallwayGroundFloor", hallwayGroundFloor),
             ("corridor1Floor", corridor1Floor),
             ("room1", room1),

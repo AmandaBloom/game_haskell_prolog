@@ -4,8 +4,10 @@
 cabal run :adventure
 ```
 
-### Also runs with 
+### or in case of error
 
+``` shell
+cabal run :all
 ```
-runhaskell AdventureGame.hs
-```
+
+### In case of trouble with missing dependencies try changing version of base build-depends to already installed version in adventure.cabal
